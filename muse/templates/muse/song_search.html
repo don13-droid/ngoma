@@ -1,0 +1,86 @@
+{%extends 'base.html'%}
+{%block title%}Ingoma-Songs{%endblock%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Ingoma Songs</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+<div class="featured pad" id="featuredalbum">
+				<div class="container">
+					<!-- default heading -->
+
+					<form role="form" id="contactForm" method="post">
+						<div class="text-center">
+							<div class="form-group">
+								{{ form | crispy }}
+								{% csrf_token %}
+								<input type="hidden" name="next" value="{{ next }}" />
+								<button type="submit" class="btn btn-lg btn-theme">Search</button>
+								</div>
+							</div>
+
+					</form>
+					<div class="featured pad" id="featuredalbum">
+    <div class="container">
+        <!-- default heading -->
+        <div class="default-heading">
+            <!-- heading -->
+            <h2>{{header}}</h2>
+        </div>
+        <!-- featured album elements -->
+
+        <div class="featured-element">
+            <!-- start a new row for every four songs -->
+            {% for song in songs %}
+            {% if forloop.counter0|divisibleby:4 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-3 col-sm-6">
+                    <!-- featured item -->
+                    <div class="featured-item ">
+                        <!-- image container -->
+                        <div class="figure-item ">
+                            <!-- image -->
+                            <img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+                        </div>
+                        <!-- featured information -->
+                        <div class="featured-item-info">
+                            <!-- featured title -->
+                            <h5>
+                                <a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
+                                    {{ song.name }}</a> {{ song.artist }}
+                                {% if song.features.all %}
+                                FT
+                                {% for feature in song.features.all %}
+                                {{ feature }},
+                                {% endfor %}
+                                {% endif %}
+                            </h5>
+                            <span class="label label-theme"> {{ song.streams.count }} Streams</span>
+                        </div>
+                    </div>
+                </div>
+            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div>
+            {% endif %}
+			{%endfor%}
+            <div class="text-center">
+					<a href="#" class="btn btn-lg btn-theme">View more</a>
+					</div>
+            <!-- close the row if it's the last item and not divisible by 4 -->
+            {% if not forloop.counter|divisibleby:4 and forloop.last %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% include "pagination.html" with page=songs %}
+{%endblock%}

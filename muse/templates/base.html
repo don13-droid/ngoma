@@ -1,0 +1,194 @@
+{%load static%}
+{%load cache%}
+{%load crispy_forms_tags%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%block title%}{%endblock%}</title>
+    <meta name="description" content="Your description">
+		<meta name="keywords" content="Your,Keywords">
+		<meta name="author" content="Donewell">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Styles -->
+		<!-- Bootstrap CSS -->
+		<link href="{%static 'muse/css/bootstrap.min.css'%}" rel="stylesheet">
+	<link href="{% static 'muse/css/mediaelementplayer.min.css' %}" rel="stylesheet"/>
+		<!-- Animate CSS -->
+		<link href="{%static 'muse/css/animate.min.css'%}" rel="stylesheet">
+		<!-- Basic stylesheet -->
+		<link rel="stylesheet" href="{%static 'muse/css/owl.carousel.css'%}">
+		<!-- Font awesome CSS -->
+		<link href="{%static 'muse/css/font-awesome.min.css'%}" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link href="{%static 'muse/css/style.css'%}" rel="stylesheet">
+		<link href="{%static 'muse/css/style-color.css'%}" rel="stylesheet">
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="{% static 'muse/img/logo/favicon.ico'%}">
+</head>
+<body>
+<div class="modal fade" id="bookTicket" tabindex="-1" role="dialog" aria-labelledby="BookTicket">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Name of The Event &nbsp; <small><span class="label label-success">Available</span> &nbsp; <span class="label label-danger">Not Available</span></small></h4>
+					</div>
+					<!-- form for events ticket booking -->
+					<form>
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Email</label>
+								<input type="email" class="form-control" id="exampleInputEmail1" placeholder="example@mail.com">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputContact">Contact</label>
+								<input type="text" class="form-control" id="exampleInputContact" placeholder="+91 55 5555 5555">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputSeats">Number of Tickets</label>
+								<select class="form-control" id="exampleInputSeats">
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+								</select>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox"> I accept the Terms of Service
+								</label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<!-- link to payment gatway here -->
+							<button type="button" class="btn btn-primary">Book Now</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- wrapper -->
+		<div class="wrapper" id="home">
+
+			<!-- header area -->
+			<header>
+				<!-- secondary menu -->
+				<nav class="secondary-menu">
+					<div class="container">
+						<!-- secondary menu left link area -->
+						<div class="sm-left">
+							<strong>Phone</strong>:&nbsp; <a href="#">0242 780 271</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<strong>E-mail</strong>:&nbsp; <a href="#">mimanzi@ingoma.com</a>
+						</div>
+						<!-- secondary menu right link area -->
+						<div class="sm-right">
+							<!-- social link -->
+							<div class="sm-social-link">
+								<a class="h-facebook" href="#"><i class="fa fa-facebook"></i></a>
+								<a class="h-twitter" href="#"><i class="fa fa-twitter"></i></a>
+								<a class="h-google" href="#"><i class="fa fa-google-plus"></i></a>
+								<a class="h-linkedin" href="#"><i class="fa fa-linkedin"></i></a>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</nav>
+				<!-- primary menu -->
+				<nav class="navbar navbar-fixed-top navbar-default">
+					<div class="container">
+						<!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav navbar-right">
+								<li><a href="{%url 'muse:category-list'%}">Home</a></li>
+								<li><a href="{%url 'muse:ingoma-songs'%}">Songs</a></li>
+								<li><a href="{%url 'muse:all-categories'%}">Genres</a></li>
+								<li><a href="{%url 'muse:ingoma-albums'%}">Albums</a></li>
+								<li><a href="{%url 'muse:billboard'%}">Billboard</a></li>
+								<li><a href="{% url 'muse:newsletter' %}">Newsletter</a></li>
+								<li><a href="{%url 'muse:events'%}">Events</a></li>
+								{%if request.user.is_authenticated%}
+								<li><a href="{%url 'muse:dashboard'%}">Dashboard</a></li>
+								{%else%}
+								<li><a href="{%url 'muse:login' %}" class="animated fadeIn btn btn-theme">Login</a></li>
+								{%endif%}
+							</ul>
+						</div><!-- /.navbar-collapse -->
+					</div><!-- /.container-fluid -->
+				</nav>
+			</header>
+{%block content%}
+{%endblock%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/
+jquery.min.js"></script>
+<script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/
+js.cookie.min.js"></script>
+<script>
+	var csrftoken = Cookies.get('csrftoken');
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	$(document).ready(function(){
+	{% block domready %}
+	{% endblock %}
+	});
+</script>
+</body>
+		<script src="{% static 'muse/js/jquery.js'%}"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static 'muse/js/bootstrap.min.js'%}"></script>
+		<!-- WayPoints JS -->
+		<script src="{% static 'muse/js/waypoints.min.js'%}"></script>
+		<!-- Include js plugin -->
+		<script src="{% static 'muse/js/owl.carousel.min.js'%}"></script>
+		<!-- One Page Nav -->
+		<script src="{% static 'muse/js/jquery.nav.js'%}"></script>
+		<!-- Respond JS for IE8 -->
+		<script src="{% static 'muse/js/respond.min.js'%}"></script>
+		<!-- HTML5 Support for IE -->
+		<script src="{% static 'muse/js/html5shiv.js'%}"></script>
+		<!-- Custom JS -->
+		<script src="{% static 'muse/js/custom.js'%}"></script>
+<!-- footer -->
+			<footer>
+				<div class="container">
+					<!-- social media links -->
+					<div class="social">
+						<a class="h-facebook" href="#"><i class="fa fa-facebook"></i></a>
+						<a class="h-google" href="#"><i class="fa fa-google-plus"></i></a>
+						<a class="h-linkedin" href="#"><i class="fa fa-linkedin"></i></a>
+						<a class="h-twitter" href="#"><i class="fa fa-twitter"></i></a>
+					</div>
+					<!-- copy right -->
+					<p class="copy-right">&copy; copyright 2022, All rights are reserved.</p>
+				</div>
+			</footer>
+			<!-- footer end -->
+
+			<!-- Scroll to top -->
+			<span class="totop"><a href="#"><i class="fa fa-chevron-up"></i></a></span>
+</html>

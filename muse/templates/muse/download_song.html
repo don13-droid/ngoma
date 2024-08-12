@@ -1,0 +1,43 @@
+{extends 'base.html'}
+{block title}Download Song{endblock}
+{block content}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Download Song "{{song.name}}"</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="container">
+									<!-- music album image -->
+									<div class="figure">
+										<!-- image -->
+										<img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+									</div>
+									<!-- album details -->
+										<div class="album-details">
+											<!-- title -->
+											<h4>{{song.name}}</h4>
+											<!-- composed by -->
+											<h5>By {{song.artist}} {%if song.feature%} ft {{song.feature}} {%endif%}</h5>
+											<!-- paragraph -->
+											<p>{{song.album}}</p>
+											<!--https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPWRvbmV3ZWxsaGFydCU0MGdtYWlsLmNvbSZhbW91bnQ9MC4wMCZyZWZlcmVuY2U9Jmw9MA%3d%3d -->
+
+                                            <a href="{{song.song.url}}" class="btn btn-lg btn-theme">&nbsp; Download Now</a>
+
+										</div>
+
+								</div>
+
+							</div>
+						</div>
+				</div>
+			</div>
+{endblock}

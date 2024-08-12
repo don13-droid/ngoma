@@ -1,0 +1,70 @@
+{%extends 'base.html'%}
+{%block title%}{{artist.user}}{%endblock%}
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>{{artist.user}}</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="col-md-6 col-sm-6">
+									<!-- music album image -->
+									<div class="figure">
+										<!-- image -->
+										<img class="img-responsive" src="{{artist.profile_picture.url}}" alt="" />
+									</div>
+									<!-- album details -->
+										<div class="album-details">
+											<!-- title -->
+											<h4>{{artist.user}}</h4>
+											<!-- composed by -->
+											<h5>
+												<span class="label label-theme"> {{ total_songs }} songs</span>
+												<span class="label label-theme"> {{ total_streams }}+ streams</span>
+											</h5>
+											<!-- paragraph -->
+											<p>{{artist.bio}}</p>
+											<!-- button -->
+
+										</div>
+
+								</div>
+								<div class="col-md-6 col-sm-6">
+									<!-- play list -->
+									{%for song in top_songs%}
+
+								<div class="playlist-content">
+										<ul class="list-unstyled">
+
+											<li class="playlist-number">
+												<div class="song-info">
+													<!-- song title -->
+													<h4>#{{forloop.counter}} {{song.name}}</h4>
+													<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp;
+														<strong>Type</strong>: {{song.category}} &nbsp;|&nbsp;
+														<strong>Artist</strong>:{{song.artist}}</p>
+												</div>
+												<!-- music icon -->
+												<div class="music-icon">
+													<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
+													<a href="#"><i class="fa fa-pause"></i></a>
+												</div>
+												<div class="clearfix"></div>
+											</li>
+										</ul>
+									</div>
+									{%endfor%}
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			<!--/ hero end -->
+{%endblock%}

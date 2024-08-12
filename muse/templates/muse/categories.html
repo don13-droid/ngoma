@@ -1,0 +1,58 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Categories{%endblock%}
+
+{%block content%}
+<div class="news-letter">
+				<div class="container">
+					<!-- news letter inner content -->
+					<div class="news-content ">
+						<!-- heading -->
+						<h3>Search Genres</h3>
+						<!-- paragraph -->
+						<p><strong>Contact Us</strong> and let us know if you have any questions, Don't forget to subscribe for more awesome stuff by typing mail bellow.</p>
+						<!-- subscribe form -->
+						<form>
+							<div class="form-group">
+                                {{ form | crispy }}
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ next }}" />
+                                <button type="submit" class="btn btn-lg btn-theme">Search</button>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+					<!-- featured album elements -->
+					<!-- featured album elements -->
+					<div class="featured-element">
+						<div class="row">
+							{%for category in categories%}
+							<div class="col-md-3">
+								<!-- featured item -->
+								<div class="featured-item ">
+									<!-- image container -->
+									<div class="figure">
+
+										<img class="img-responsive" src="{{category.image.url}}" alt="" />
+									</div>
+									<!-- featured information -->
+									<div class="featured-item-info">
+										<!-- featured title -->
+										<h4>
+											<a href="{{category.get_absolute_url}}"> {{category.name}}</a>
+										</h4>
+										<!-- horizontal line -->
+										<hr />
+									</div>
+								</div>
+							</div>
+							{%endfor%}
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- features end -->
+			{% include "pagination.html" with page=categories %}
+{%endblock%}

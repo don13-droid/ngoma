@@ -1,0 +1,61 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Play Song "{{song.name}}"</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="container">
+									<!-- music album image -->
+									<div class="figure">
+										<!-- image -->
+										<img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+									</div>
+									<!-- album details -->
+										<div class="album-details">
+											<!-- title -->
+											<h4>{{song.name}}</h4>
+											<!-- composed by -->
+											<h5>{{song.artist}} {% if song.features.all %}
+													ft
+													{% for feature in song.features.all %}
+													{{ feature }},
+													{% endfor %}
+													{% endif %}
+											</h5>
+											<!-- paragraph -->
+											<p>{{song.streams.count}}+ streams</p>
+											<!--https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPWRvbmV3ZWxsaGFydCU0MGdtYWlsLmNvbSZhbW91bnQ9MC4wMCZyZWZlcmVuY2U9Jmw9MA%3d%3d -->
+
+											{%if song.status == 'free'%}
+												<a href="{%url 'muse:paynow-transfer' pk=song.id%}" class="label label-theme">
+													<i class="fa fa-bitcoin"></i>&nbsp;&nbsp;Purchase Now</a>
+												<a href="{{song.get_absolute_url}}" class="label label-theme"><i class="fa fa-play"></i>&nbsp; Play Song</a>
+												<a href="{{song.song.url}}" class="label label-theme"><i class="fa fa-download"></i>&nbsp; Download for Free</a>
+											{%else%}
+												<a href="{%url 'muse:paynow-transfer' pk=song.id%}" class="label label-theme">
+													<i class="fa fa-bitcoin"></i>&nbsp;&nbsp;Purchase Now</a>
+												<a href="{{song.get_absolute_url}}" class="label label-theme"><i class="fa fa-play"></i>&nbsp; Play Demo</a>
+											{%endif%}
+
+
+
+										</div>
+
+								</div>
+
+							</div>
+						</div>
+				</div>
+			</div>
+{%endblock%}

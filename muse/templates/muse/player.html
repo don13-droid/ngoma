@@ -1,0 +1,165 @@
+{% load static %}
+{%load crispy_forms_tags%}
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   My Music Player
+  </title>
+     <link href="{%static 'muse/css/bootstrap.min.css'%}" rel="stylesheet">
+  <link href="{% static 'muse/css/font-awesome.css' %}" rel="stylesheet"/>
+  <link href="{% static 'muse/css/mediaelementplayer.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'muse/css/player.css' %}" rel="stylesheet"/>
+     <link href="{%static 'muse/css/style.css'%}" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<!-- Custom CSS -->
+
+ </head>
+ <body>
+  <!-- partial:index.partial.html -->
+  <html>
+   <head>
+    <meta charset="utf-8"/>
+    <title>
+     Flat music player
+    </title>
+   </head>
+   <body>
+    <div class="contain">
+     <div class="container">
+      <div class="music-player">
+       <div class="cover">
+        <img alt="" src="{{song.song_art.url}}"/>
+       </div>
+       <div class="titre">
+        <h3>
+         {{song.artist}}{%if song.feature%} ft {{song.feature}} {%endif%}
+        </h3>
+        <h1>
+         {{song.name}}
+        </h1>
+       </div>
+       <center><a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}"><i class="fa fa-step-backward fa-2x"></i></a> &nbsp; &nbsp; &nbsp; <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }} {% endif %}"><i class="fa fa-step-forward fa-2x"></i></a></center>
+       <div class="lecteur">
+        <audio class="fc-media" style="width: 100%;">
+			{%if song.status == 'free'%}
+         		<source src="{{song.song.url}}" type="audio/mp3"/>
+			{%else%}
+				<source src="{{song.demo.url}}" type="audio/mp3"/>
+			{%endif%}
+        </audio>
+
+       </div>
+      </div>
+     </div>
+    </div>
+  <hr>
+		<ul class="list-inline">
+			<li><i class="fa fa-comments"></i>
+			{% with comments.count as total_comments %}
+			{{ total_comments }} comment{{ total_comments|pluralize }}
+			{% endwith %}
+			</li>
+			</ul>
+		</div>
+{% for comment in comments %}
+	<div class="comment-list">
+
+
+		<ul>
+			<li class="comment">
+				<div class="single_comment first-comment">
+
+					<div class="container">
+					<!-- promo element -->
+					<div class="promo-element ">
+						<!-- heading -->
+						<h4 class="comment-name"><a href="#">Comment {{ forloop.counter }} by {{ comment.name }}</a></h4>
+						<div class="comment-desc">{{ comment.created }}</div>
+						<p>
+							<strong>
+									{{comment.body}}
+							</strong>
+						</p>
+						<!-- link -->
+						<a class="promo-link" href="#"><i class="fa fa-play-circle"></i></a>
+					</div>
+				</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+    {%endfor%}
+<hr>
+		<ul class="list-inline">
+			<li><i class="fa fa-comments"></i>
+			{% with comments.count as total_comments %}
+			{{ total_comments }} comment{{ total_comments|pluralize }}
+			{% endwith %}
+			</li>
+			</ul>
+		</div>
+{% for comment in comments %}
+	<div class="comment-list">
+
+
+		<ul>
+			<li class="comment">
+				<div class="single_comment first-comment">
+
+					<div class="container">
+					<!-- promo element -->
+					<div class="promo-element ">
+						<!-- heading -->
+						<h4 class="comment-name"><a href="#">Comment {{ forloop.counter }} by {{ comment.name }}</a></h4>
+						<div class="comment-desc">{{ comment.created }}</div>
+						<p>
+							<strong>
+									{{comment.body}}
+							</strong>
+						</p>
+						<!-- link -->
+						<a class="promo-link" href="#"><i class="fa fa-play-circle"></i></a>
+					</div>
+				</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+{% empty %}
+	<h4>There are no comments yet.</h4>
+{% endfor %}
+<!-- /comment List -->
+
+							<!-- Comment Section -->
+							<div class="comments-section">
+								<h3>Leave a Comment</h3>
+								<div class="comment-form">
+									<form method="post">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form | crispy}}
+												{% csrf_token %}
+                                            </div>
+                                            <div class="col-md-12 text-LEFT">
+                                                <button type="submit" class="btn btn-gray-border">Send Comment</button>
+                                            </div>
+                                        </div>
+                                    </form>
+								</div>
+							</div>
+			<!--/ hero end -->
+
+   </body>
+  </html>
+  <!-- partial -->
+  <script src="{% static 'muse/js/jquery.min.js' %}">
+  </script>
+  <script src="{% static 'muse/js/mediaelement-and-player.min.js' %}">
+  </script>
+  <script src="{% static 'muse/js/script.js' %}">
+  </script>
+ </body>
+</html>

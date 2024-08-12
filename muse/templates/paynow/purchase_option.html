@@ -1,0 +1,60 @@
+{%extends 'base.html'%}
+{%block title%}{%endblock%}
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Buy Song "{{song.name}}"</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="col-md-6 col-sm-6">
+									<!-- music album image -->
+									<div class="figure">
+										<!-- image -->
+										<img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+									</div>
+									<!-- album details -->
+										<div class="album-details">
+											<!-- title -->
+											<h5>{{song.artist}} {% if song.features.all %}
+													ft
+													{% for feature in song.features.all %}
+													{{ feature }},
+													{% endfor %}
+													{% endif %}
+											</h5>
+											<!-- composed by -->
+											<h5>
+												<span class="label label-theme"> {{ total_songs }} songs</span>
+												<span class="label label-theme"> {{ total_streams }}+ streams</span>
+											</h5>
+											<!-- paragraph -->
+											<p>{{artist.bio}}</p>
+											<!-- button -->
+
+										</div>
+
+								</div>
+								<div class="col-md-6 col-sm-6">
+									<!-- play list -->
+
+                                    <div class="text-center">
+                                        <h3>Select <STRONG class="theme-color">Payment</STRONG> Option</h3>
+										<a href='https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPWRvbmV3ZWxsJTQwYnJhbmRzYnlkYXJ0LmNvbSZhbW91bnQ9MTQuMDAmcmVmZXJlbmNlPSZsPTE%3d' target='_blank'><img src='https://www.paynow.co.zw/Content/Buttons/Medium_buttons/button_pay-now_medium.png' style='border:0' /></a>
+                                        <a href="{%url 'muse:paynow' song_name=song.name song_id=song.id %}" class="btn btn-lg btn-theme">Ecocash USD</a>
+                                        <a href="{%url 'muse:paynow' song_name=song.name song_id=song.id %}" class="btn btn-lg btn-theme">Ecocash ZIG</a>
+                                        <a href="{%url 'muse:paynow-transfer' pk=song.id%}" class="btn btn-lg btn-theme">ZIG Transfer</a>
+							</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			<!--/ hero end -->
+{%endblock%}

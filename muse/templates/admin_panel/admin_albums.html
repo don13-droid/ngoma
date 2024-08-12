@@ -1,0 +1,66 @@
+{%extends 'base_admin.html'%}
+
+{%block content%}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Albums</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Top Selling -->
+            <div class="col-12">
+              <div class="card top-selling overflow-auto">
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Songs</h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Art</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Feature</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {%for album in albums%}
+                      <tr>
+                        <th scope="row"><a href="{%url 'muse:update-album' pk=album.id%}">
+                          {%if album.album_art%}
+                          <img src="{{album.album_art.url}}" alt=""></a></th>
+                          {%endif%}
+                        <td><a href="{%url 'muse:update-album' pk=album.id%}" class="text-primary fw-bold">{{album.name}}</td>
+                        <td>{{album.category}}</td>
+                        <td>{{album.feature}}</td>
+                        <td><div class="icon">
+                              <i class="bi bi-trash-fill"></i>
+                              <a href="{%url 'muse:delete_album' pk=album.id%}" class="label">Delete</a>
+                            </div>
+                        </td>
+                      </tr>
+                    {%endfor%}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Top Selling -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+{% include "pagination.html" with page=songs %}
+  </main><!-- End #main -->
+{%endblock%}

@@ -1,0 +1,37 @@
+{%extends 'base_admin.html'%}
+{%block title%}News and Updates{%endblock%}
+{%block content%}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>News and Updates</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+<!-- Card with an image on left -->
+        <div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{update.image.url}}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{update.title}}</h5>
+                      <p class="card-text">{{update.body}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- End Card with an image on left -->
+          </div>
+        </div>
+        </div>
+
+    </section>
+</main>
+
+
+{%endblock%}

@@ -1,0 +1,53 @@
+{%extends 'base.html'%}
+{%block title%}Top-Songs{%endblock%}
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Billboard Top 100</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="col-md-6 col-sm-6">
+									<!-- play list -->
+									{%for song in songs%}
+									<div class="playlist-content">
+										<ul class="list-unstyled">
+											<li class="playlist-number">
+												<!-- song information -->
+
+												<div class="song-info">
+													<!-- song title -->
+													<h4>{{song.name}}</h4>
+													<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp;
+														<strong>Type</strong>: {{song.category}} &nbsp;|&nbsp;
+														<strong>Singer</strong>:
+														{{song.artist}}
+														{%if song.feature%}
+															ft {{song.feature}}
+														{%endif%}
+													</p>
+												</div>
+												<!-- music icon -->
+												<div class="music-icon">
+													<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
+													<a href="#"><i class="fa fa-pause"></i></a>
+												</div>
+												<div class="clearfix"></div>
+											</li>
+										</ul>
+									</div>
+									{%endfor%}
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+{% include "pagination.html" with page=songs %}
+{%endblock%}

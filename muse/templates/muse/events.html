@@ -1,0 +1,82 @@
+{%extends 'base.html'%}
+{%block title%}Ingoma Events{%endblock%}
+{%block content%}
+<!-- events -->
+			<div class="events parallax-three pad" id="events">
+				<div class="container">
+					<!-- default heading -->
+					<div class="default-heading-shadow">
+						<!-- heading -->
+						<h2>Coming Events</h2>
+					</div>
+					<!-- events element -->
+					<div class="events-element">
+						<div class="row">
+							{%for event in events%}
+							<div class="col-md-6 col-sm-6">
+								<!-- event item -->
+								<div class="events-item ">
+									<!-- image container -->
+									<div class="figure">
+										<!-- event date -->
+										<div class="event-date">
+											24 <span class="emonth">Jan</span>
+											<div class="clearfix"></div>
+											<!-- time -->
+											<span class="etime">{{event.event_date}}</span>
+										</div>
+										<!-- event location -->
+										<span class="event-location"><i class="fa fa-map-marker"></i>{{event.event_venue}}</span>
+										<!-- image -->
+										<img class="img-responsive" src="{{event.image.url}}" alt="" />
+										<!-- image hover -->
+										<div class="img-hover">
+											<!-- hover icon -->
+											<a href="#"><i class="fa fa-play-circle"></i></a>
+										</div>
+									</div>
+									<!-- event information -->
+									<div class="event-info">
+										<!-- event title -->
+										<h3>{{event.name}}</h3>
+										<!-- horizontal line --><hr />
+										<!-- paragraph -->
+										<p>{{event.about_event}}... <a href="#">more</a></p>
+										<!-- buy ticket button link -->
+										<button href="#bookTicket" class="btn btn-lg btn-theme" data-toggle="modal" >Book Ticket</button>
+									</div>
+								</div>
+							</div>
+							{%endfor%}
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- events end -->
+
+{% include "pagination.html" with page=events %}
+			<!-- meet -->
+			<div class="meet parallax-four pad" id="meet">
+				<div class="container">
+					<!-- default heading -->
+					<div class="default-heading-shadow">
+						<h2>Upcoming Meets</h2>
+					</div>
+					<!-- meet location image -->
+					<div class="meet-map">
+						<img class="img-responsive img-map" src="img/flat/map.png" alt="" />
+						<!-- map marker for India  -->
+						<a href="#" class="map-marker india " data-toggle="tooltip" data-placement="top" title="India"><img class="img-responsive" src="img/flat/map-marker.png" alt="" /></a>
+						<!-- map marker for United States  -->
+						<a href="#" class="map-marker usa " data-toggle="tooltip" data-placement="top" title="United States"><img class="img-responsive" src="img/flat/map-marker.png" alt="" /></a>
+						<!-- map marker for South Africa  -->
+						<a href="#" class="map-marker sa " data-toggle="tooltip" data-placement="top" title="South Africa"><img class="img-responsive" src="img/flat/map-marker.png" alt="" /></a>
+						<!-- map marker for Russia  -->
+						<a href="#" class="map-marker russia " data-toggle="tooltip" data-placement="top" title="Russia"><img class="img-responsive" src="img/flat/map-marker.png" alt="" /></a>
+						<!-- map marker for Brazil  -->
+						<a href="#" class="map-marker brazil " data-toggle="tooltip" data-placement="top" title="Brazil"><img class="img-responsive" src="img/flat/map-marker.png" alt="" /></a>
+					</div>
+				</div>
+			</div>
+			<!-- meet end -->
+{%endblock%}

@@ -1,0 +1,129 @@
+{%extends 'base.html'%}
+{%block title%}{{album.name}}{%endblock%}
+{%block content%}
+<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>{{album.name}}</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+					<div class="hero-playlist">
+						<div class="row">
+							<div class="col-md-6 col-sm-6">
+								<!-- music album image -->
+								<div class="figure">
+									<!-- image -->
+									<img class="img-responsive" src="{{album.album_art.url}}" alt="" />
+									<!-- disk image -->
+									{%if site_data.disk_image%}
+									<img class="img-responsive disk" src="{{site_data.disk_image.url}}" alt="" />
+									{%endif%}
+								</div>
+								<!-- album details -->
+								<div class="album-details">
+									<!-- title -->
+									<h4>{{album.name}}</h4>
+									<!-- composed by -->
+									<h5>{{album.artist}}</h5>
+									<!-- paragraph -->
+									<p>{{album.about_album}}.</p>
+									<hr>
+									</div>
+							</div>
+							<div class="col-md-6 col-sm-6">
+								<!-- play list -->
+								<div class="playlist-content">
+									<ul class="list-unstyled">
+										{%for song in songs%}
+										<li class="playlist-number">
+											<!-- song information -->
+											<div class="song-info">
+												<!-- song title -->
+												<h4>{{song.name}}</h4>
+												<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp; <strong>Type</strong>:
+													{{song.category}} &nbsp;|&nbsp; <strong>Artist</strong>: {{song.artist}}</p>
+											</div>
+											<!-- music icon -->
+											<div class="music-icon">
+												<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
+												<a href="#"><i class="fa fa-pause"></i></a>
+											</div>
+											<div class="clearfix"></div>
+										</li>
+										{%endfor%}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ hero end -->
+<div class="portfolio pad" id="portfolio">
+				<div>
+					<!-- default heading -->
+					<div class="default-heading">
+						<!-- heading -->
+						<h2>OTHER SONGS BY {{album.artist}}</h2>
+					</div>
+				</div>
+				<!-- portfolio -->
+				<div class="portfolio-content" id="portfolioOwl">
+					{%for song in other_songs%}
+					<div class="item">
+						<!-- item image -->
+						<img class="img-responsive" src="{{song.song_art.url}}" alt="">
+						<!-- transparent background -->
+						<div class="p-transparent"></div>
+						<!-- on mouse hover details -->
+						<div class="p-hover">
+							<!-- heading /title -->
+							<h3>{{song.name}}</h3><hr>
+							<!-- project details -->
+							<p>{{song.album}}</p>
+							<p>{{song.about_song}}</p>
+							<!-- icon -->
+							<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-share"></i></a>
+						</div>
+					</div>
+					{%endfor%}
+				</div>
+				<div class="text-center">
+					<a href="#" class="btn btn-lg btn-theme">View more</a>
+				</div>
+				<!-- portfolio end -->
+			</div>
+{%endblock%}
+{% block domready %}
+	$('a.like').click(function(e){
+		e.preventDefault();
+		$.post('{% url "muse:album-like" %}',
+		{
+			id: $(this).data('name'),
+			action: $(this).data('action')
+		},
+		function(data){
+			if (data['status'] == 'ok')
+			{
+				var previous_action = $('a.like').data('action');
+				// toggle data-action
+				$('a.like').data('action', previous_action == 'like' ?
+				'unlike' : 'like');
+				// toggle link text
+				$('a.like').text(previous_action == 'like' ? 'Unlike' :
+				'Like');
+				// update total likes
+				var previous_likes = parseInt($('span.count .total').
+text());
+				$('span.count .total').text(previous_action == 'like' ?
+				previous_likes + 1 : previous_likes - 1);
+			}
+		}
+	);
+});
+{% endblock %}

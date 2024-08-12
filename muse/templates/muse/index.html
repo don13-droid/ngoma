@@ -1,0 +1,363 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block title%}home{%endblock%}/title>
+		<!-- modal for booking ticket form -->
+{%block content%}
+			<!--/ header end -->
+			
+			<!-- banner area -->
+			<div class="banner">
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner" role="listbox">
+						<div class="item active">
+							<img src="{%static 'muse/img/banner/ingoma.jpg'%}" alt="...">
+							<div class="container">
+								<!-- banner caption -->
+								<div class="carousel-caption slide-one">
+									<!-- heading -->
+									<h2 class="animated fadeInLeftBig"><i class="fa fa-music"></i>Ingoma For You!</h2>
+									<!-- paragraph -->
+									<h3 class="animated fadeInRightBig">Your Best Platform For Local Music</h3>
+									<!-- button -->
+									<a href="https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPWRvbmV3ZWxsaGFydCU0MGdtYWlsLmNvbSZhbW91bnQ9MC4wMCZyZWZlcmVuY2U9Jmw9MA%3d%3d" class="animated fadeIn btn btn-theme">Support Ingoma</a>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<img src="{%static 'muse/img/banner/b1.jpg'%}" alt="...">
+							<div class="container">
+								<!-- banner caption -->
+								<div class="carousel-caption slide-two">
+									<!-- heading -->
+									<h2 class="animated fadeInLeftBig"><i class="fa fa-headphones"></i> Listen It...</h2>
+									<!-- paragraph -->
+									<h3 class="animated fadeInRightBig">Find More and Innovative Music</h3>
+									<!-- button -->
+									<a href="{%url 'muse:ingoma-songs'%}" class="animated fadeIn btn btn-theme">Listen Now</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Controls -->
+					<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+						<span class="fa fa-arrow-left" aria-hidden="true"></span>
+					</a>
+					<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+						<span class="fa fa-arrow-right" aria-hidden="true"></span>
+					</a>
+				</div>
+			</div>
+			<!--/ banner end -->
+			
+			<!-- block for animate navigation menu -->
+			<div class="nav-animate"></div>
+			
+			<!-- Hero block area -->
+			<div id="latestalbum" class="hero pad">
+				<div class="container">
+					<!-- hero content -->
+					<div class="hero-content ">
+						<!-- heading -->
+						<h2>Ingoma Top 10 Chart</h2>
+						<hr>
+						<!-- paragraph -->
+						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
+					</div>
+					<!-- hero play list -->
+						<div class="hero-playlist">
+							<div class="row">
+								<div class="col-md-6 col-sm-6">
+									<!-- music album image -->
+									<div class="figure">
+										<!-- image -->
+										<img class="img-responsive" src="{{best_song.song_art.url}}" alt="" />
+										<img class="img-responsive disk" src="{%static 'muse/img/album/disk.png'%}" alt="" />
+									</div>
+									<!-- album details -->
+										<div class="album-details">
+											<!-- title -->
+											<h4>{{best_song.name}}</h4>
+											<!-- composed by -->
+											<h5>By {{best_song.artist}}</h5>
+											<!-- paragraph -->
+											<p>{{best_song.about_album}}</p>
+											<!-- button -->
+											<a href="{{latest_album.get_absolute_url}}" class="btn btn-lg btn-theme"><i class="fa fa-play"></i>&nbsp; Play Now</a>
+										</div>
+
+								</div>
+								<div class="col-md-6 col-sm-6">
+									<!-- play list -->
+									{%for song in top_songs%}
+
+								<div class="playlist-content">
+										<ul class="list-unstyled">
+
+											<li class="playlist-number">
+												<div class="song-info">
+													<!-- song title -->
+													<h4>#{{forloop.counter}} {{song.name}}</h4>
+													<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp;
+														<strong>Type</strong>: {{song.category}} &nbsp;|&nbsp;
+														<strong>Artist</strong>:{{song.artist}}</p>
+												</div>
+												<!-- music icon -->
+												<div class="music-icon">
+													<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
+													<a href="#"><i class="fa fa-pause"></i></a>
+												</div>
+												<div class="clearfix"></div>
+											</li>
+										</ul>
+									</div>
+									{%endfor%}
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			<!--/ hero end -->
+			
+			<!-- promo -->
+			<div class="promo parallax-one pad">
+				<div class="container">
+					<!-- promo element -->
+					<div class="promo-element ">
+						<!-- heading -->
+						<h3>Music An Art...</h3>
+						<p><strong>{{quote.quote_one}}</strong></p>
+						<!-- link -->
+						<a class="promo-link" href="#"><i class="fa fa-play-circle"></i></a>
+					</div>
+				</div>
+			</div>
+			<!--/ promo end -->
+			
+			<!-- featured abbum -->
+			<div class="featured pad" id="featuredalbum">
+				<div class="container">
+					<!-- default heading -->
+					<div class="default-heading">
+						<!-- heading -->
+						<h2>Hot Artists</h2>
+					</div>
+					<!-- featured album elements -->
+					<div class="featured-element">
+						{%for artist in top_artists%}
+						{% if forloop.counter0|divisibleby:4 %}
+						<div class="row">
+						{% endif %}
+							<div class="col-md-3 col-sm-6">
+								<!-- featured item -->
+								<div class="featured-item ">
+									<!-- image container -->
+									<div class="figure ">
+										<!-- image -->
+
+
+										<img class="img-responsive" src="{{artist.profile_picture.url}}" alt="" />
+										<!-- paragraph -->
+
+									</div>
+									<!-- featured information -->
+									<div class="featured-item-info">
+										<!-- featured title -->
+										<h5>
+											<a href="{% url 'muse:single-artist' pk=artist.id %}"> {{artist.user}}</a>
+										</h5>
+										<!-- horizontal line -->
+										<hr />
+									</div>
+								</div>
+							</div>
+						{% if forloop.counter|divisibleby:4 and not forloop.last %}
+						</div>
+						{% endif %}
+						{%endfor%}
+					</div>
+				</div>
+			</div>
+			<!-- features end -->
+			<div class="text-center">
+					<a href="{%url 'muse:artists'%}" class="btn btn-lg btn-theme">View more</a>
+				</div>
+			<!-- features end -->
+			<hr></hr>
+
+<div class="featured pad" id="featuredalbum">
+    <div class="container">
+        <!-- default heading -->
+        <div class="default-heading">
+            <!-- heading -->
+            {%if request.user.is_authenticated%}
+						<h2>Recommended Songs For You</h2>
+						{%else%}
+						<h2>Popular Songs</h2>
+						{%endif%}
+        </div>
+        <!-- featured album elements -->
+        <div class="featured-element">
+            <!-- start a new row for every four songs -->
+            {% for song in recommended_songs %}
+            {% if forloop.counter0|divisibleby:4 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-3 col-sm-6">
+                    <!-- featured item -->
+                    <div class="featured-item ">
+                        <!-- image container -->
+                        <div class="figure-item ">
+                            <!-- image -->
+							<a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
+                            <img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+								</a>
+                        </div>
+                        <!-- featured information -->
+                        <div class="featured-item-info">
+                            <!-- featured title -->
+                            <h5>
+
+                                   <a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
+									   {{ song.name }}</a>
+									{{ song.artist }}
+
+                                {% if song.features.all %}
+                                ft
+                                {% for feature in song.features.all %}
+                                {{ feature }},
+                                {% endfor %}
+                                {% endif %}
+                            </h5>
+                            <span class="label label-theme"><i class="fa fa-music"></i>&nbsp; {{ song.streams.count }} Streams</span>
+                        </div>
+                    </div>
+                </div>
+            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <!-- close the row if it's the last item and not divisible by 4 -->
+            {% if not forloop.counter|divisibleby:4 and forloop.last %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+				<div class="text-center">
+					<a href="" class="btn btn-lg btn-theme">View more</a>
+				</div>
+			<!-- features end -->
+			<hr></hr>
+			<div class="featured pad" id="featuredalbum">
+    <div class="container">
+        <!-- default heading -->
+        <div class="default-heading">
+            <!-- heading -->
+            <h2>New Songs</h2>
+        </div>
+        <!-- featured album elements -->
+        <div class="featured-element">
+            <!-- start a new row for every four songs -->
+            {% for song in new_songs %}
+            {% if forloop.counter0|divisibleby:4 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-3 col-sm-6">
+                    <!-- featured item -->
+                    <div class="featured-item ">
+                        <!-- image container -->
+                        <div class="figure-item ">
+                            <!-- image -->
+							<a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
+                            <img class="img-responsive" src="{{song.song_art.url}}" alt="" />
+								</a>
+                        </div>
+                        <!-- featured information -->
+                        <div class="featured-item-info">
+                            <!-- featured title -->
+                            <h5>
+                                <a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
+                                    {{ song.name }}</a> {{ song.artist }}
+                                {% if song.features.all %}
+                                FT
+                                {% for feature in song.features.all %}
+                                {{ feature }},
+                                {% endfor %}
+                                {% endif %}
+                            </h5>
+                            <span class="label label-theme"><i class="fa fa-music"></i>&nbsp;  {{ song.streams.count }} Streams</span>
+                        </div>
+                    </div>
+                </div>
+            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <!-- close the row if it's the last item and not divisible by 4 -->
+            {% if not forloop.counter|divisibleby:4 and forloop.last %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+				<div class="text-center">
+							<a href="" class="btn btn-lg btn-theme">View more</a>
+							</div>
+				<hr>
+			</div>
+				<div class="portfolio pad" id="portfolio">
+					<div class="default-heading">
+						<!-- heading -->
+						<h2>Ingoma Albums</h2>
+					</div>
+				<!-- portfolio -->
+				<div class="portfolio-content" id="portfolioOwl">
+					{%for album in top_albums%}
+					<div class="item">
+						<!-- item image -->
+						<img class="img-responsive" src="{{album.album_art.url}}" alt="">
+						<!-- transparent background -->
+						<div class="p-transparent"></div>
+						<!-- on mouse hover details -->
+						<div class="p-hover">
+							<!-- heading /title -->
+							<h3>{{album.name}}</h3><hr>
+							<!-- project details -->
+							<p>{{album.about_album}}</p>
+						</div>
+					</div>
+					{%endfor%}
+				<!-- portfolio end -->
+			</div>
+					<div class="text-center">
+					<a href="{%url 'muse:ingoma-albums'%}" class="btn btn-lg btn-theme">View more</a>
+					</div>
+			<!-- work with us end -->
+			<div class="cta parallax-one pad">
+				<div class="container">
+					<!-- cta element -->
+					<div class="cta-element ">
+						<div class="row">
+							<div class="col-md-9 col-sm-8">
+								<!-- heading -->
+								<h3>Ingoma Music</h3>
+								<!-- paragraph -->
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim sectetur adipiscing elit, sed do eiusmod tempoad minim veniam consequat.</p>
+							</div>
+							<div class="col-md-3 col-sm-4">
+								<div class="cta-btn text-center">
+									<!-- purchase now button -->
+									<a href="#" class="btn btn-default btn-lg">Download Now</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ cta end -->
+			
+			<!-- work with us -->
+
+{%endblock%}
