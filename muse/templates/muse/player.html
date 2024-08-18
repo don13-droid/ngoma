@@ -11,7 +11,8 @@
   <link href="{% static 'muse/css/font-awesome.css' %}" rel="stylesheet"/>
   <link href="{% static 'muse/css/mediaelementplayer.min.css' %}" rel="stylesheet"/>
   <link href="{% static 'muse/css/player.css' %}" rel="stylesheet"/>
-     <link href="{%static 'muse/css/style.css'%}" rel="stylesheet">
+    <link href="{%static 'muse/css/comments.css'%}" rel="stylesheet">
+
 
 		<!-- Custom CSS -->
 		<!-- Custom CSS -->
@@ -57,100 +58,49 @@
     </div>
   <hr>
 		<ul class="list-inline">
-			<li><i class="fa fa-comments"></i>
-			{% with comments.count as total_comments %}
-			{{ total_comments }} comment{{ total_comments|pluralize }}
-			{% endwith %}
-			</li>
+            <h3>Comment(s) {{comments.count}} </h3>
 			</ul>
-		</div>
-{% for comment in comments %}
-	<div class="comment-list">
 
-
-		<ul>
-			<li class="comment">
-				<div class="single_comment first-comment">
-
-					<div class="container">
-					<!-- promo element -->
-					<div class="promo-element ">
-						<!-- heading -->
-						<h4 class="comment-name"><a href="#">Comment {{ forloop.counter }} by {{ comment.name }}</a></h4>
-						<div class="comment-desc">{{ comment.created }}</div>
-						<p>
-							<strong>
-									{{comment.body}}
-							</strong>
-						</p>
-						<!-- link -->
-						<a class="promo-link" href="#"><i class="fa fa-play-circle"></i></a>
-					</div>
-				</div>
-				</div>
-			</li>
-		</ul>
-	</div>
-    {%endfor%}
 <hr>
-		<ul class="list-inline">
-			<li><i class="fa fa-comments"></i>
-			{% with comments.count as total_comments %}
-			{{ total_comments }} comment{{ total_comments|pluralize }}
-			{% endwith %}
-			</li>
-			</ul>
-		</div>
-{% for comment in comments %}
-	<div class="comment-list">
+<div class="comment-list">
 
 
-		<ul>
-			<li class="comment">
-				<div class="single_comment first-comment">
+								<ol>
+									{%for comment in comments%}
+									<li class="comment">
+										<div class="single_comment first-comment">
+											<div class="comment-avatar">
+												<div class="avatar">
+													<img src="images/blog/avatar1.jpg" alt="">
+												</div>
+											</div>
+											<div class="comment-content">
+												<div class="comment-name"><a href="#">{{comment.name}}</a><span>-</span><a href="#" class="comment-reply">Reply</a></div>
+												<div class="comment-desc">{{comment.created}}</div>
+												<div class="comment-text">
+                                                    <p>{{comment.body}}</p>
+												</div>
+											</div>
+										</div>
+									</li>
+									{%endfor%}
+								</ol>
 
-					<div class="container">
-					<!-- promo element -->
-					<div class="promo-element ">
-						<!-- heading -->
-						<h4 class="comment-name"><a href="#">Comment {{ forloop.counter }} by {{ comment.name }}</a></h4>
-						<div class="comment-desc">{{ comment.created }}</div>
-						<p>
-							<strong>
-									{{comment.body}}
-							</strong>
-						</p>
-						<!-- link -->
-						<a class="promo-link" href="#"><i class="fa fa-play-circle"></i></a>
-					</div>
-				</div>
-				</div>
-			</li>
-		</ul>
-	</div>
-{% empty %}
-	<h4>There are no comments yet.</h4>
-{% endfor %}
-<!-- /comment List -->
-
-							<!-- Comment Section -->
-							<div class="comments-section">
+							</div>
+                            <div class="comments-list">
 								<h3>Leave a Comment</h3>
 								<div class="comment-form">
 									<form method="post">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ form | crispy}}
-												{% csrf_token %}
-                                            </div>
-                                            <div class="col-md-12 text-LEFT">
-                                                <button type="submit" class="btn btn-gray-border">Send Comment</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        					<div >
+                                            						{{form | crispy}}
+											{%csrf_token%}
+                                            							<div class="col-md-1 text-right">
+                                                						<button type="submit" class="btn btn-gray-border">Send Comment</button>
+                                           							 </div>
+                                        					</div>
+                                    					</form>
 								</div>
 							</div>
-			<!--/ hero end -->
 
    </body>
   </html>

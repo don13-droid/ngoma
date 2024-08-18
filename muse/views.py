@@ -480,7 +480,7 @@ def paynow_transfer(request, pk):
                 response = paynow.send(payment)
                 if response.success:
                     link = response.redirect_url
-                    poll_url = response.poll_url
+                    poll_url = response.poll
                     new_sale = Sales(song = song,
                                      user = request.user,
                                      artist = song.artist,
@@ -527,8 +527,19 @@ def player(request, song, song_id):
         stream.add(song=song, user=None)
 
     comment_form = CommentForm()
-
+    object_list = song.comments.filter(active=True)
+    paginator = Paginator(object_list, 12)
+    page = request.GET.get('page')
+    try:
+        comments = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer deliver the first page
+        comments = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range deliver last page of results
+        comments = paginator.page(paginator.num_pages)
     context = {
+        'comments':comments,
         'form':comment_form,
         'song':song,
     }
@@ -661,10 +672,15 @@ def top_artist(top_songs):
 
 
 def home(request):
-    top_songs = get_top_songs()[:10]
+    try:
+        top_songs = get_top_songs()[:10]
+        best_song = get_object_or_404(Song,
+                                      name=top_songs[0])
+    except:
+        top_songs = []
+        best_song = []
 
-    best_song = get_object_or_404(Song,
-                                  name=top_songs[0])
+
 
     popular_artist_profiles = top_artist(top_songs)
     new_songs = newsongs()[:12]
