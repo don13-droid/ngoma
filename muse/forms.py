@@ -38,7 +38,7 @@ class UserRegistrationForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
-        fields = ('name', 'email', 'body')
+        fields = ('body',)
 
 class SongUpload(forms.ModelForm):
     class Meta:

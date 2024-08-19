@@ -51,7 +51,7 @@ class SongAdmin(admin.ModelAdmin):
 
 @admin.register(Comments)
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = ['name','created','active']
+    list_display = ['user','created','active']
     list_filter = ['created','active']
 
 def make_cleared(modeladmin, request, queryset):

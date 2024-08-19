@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'muse.apps.MuseConfig',
     'crispy_forms',
     "crispy_bootstrap4",
-    "django.contrib.postgres"
+    "django.contrib.postgres",
+    'social_django',
 
 
 ]

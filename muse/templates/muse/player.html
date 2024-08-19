@@ -5,7 +5,7 @@
  <head>
   <meta charset="utf-8"/>
   <title>
-   My Music Player
+   {{ song.name }}
   </title>
      <link href="{%static 'muse/css/bootstrap.min.css'%}" rel="stylesheet">
   <link href="{% static 'muse/css/font-awesome.css' %}" rel="stylesheet"/>
@@ -69,14 +69,8 @@
 									{%for comment in comments%}
 									<li class="comment">
 										<div class="single_comment first-comment">
-											<div class="comment-avatar">
-												<div class="avatar">
-													<img src="images/blog/avatar1.jpg" alt="">
-												</div>
-											</div>
 											<div class="comment-content">
-												<div class="comment-name"><a href="#">{{comment.name}}</a><span>-</span><a href="#" class="comment-reply">Reply</a></div>
-												<div class="comment-desc">{{comment.created}}</div>
+												<div class="comment-name">{{comment.user}}<span>-</span>{{comment.created}}</div>
 												<div class="comment-text">
                                                     <p>{{comment.body}}</p>
 												</div>
@@ -88,19 +82,23 @@
 
 							</div>
                             <div class="comments-list">
-								<h3>Leave a Comment</h3>
-								<div class="comment-form">
-									<form method="post">
-                                        					<div >
-                                            						{{form | crispy}}
-											{%csrf_token%}
-                                            							<div class="col-md-1 text-right">
-                                                						<button type="submit" class="btn btn-gray-border">Send Comment</button>
-                                           							 </div>
-                                        					</div>
-                                    					</form>
-								</div>
-							</div>
+                                {% if request.user.is_authenticated %}
+                                        <h3>Leave a Comment</h3>
+                                        <div class="comment-form">
+                                            <form method="post">
+                                                                    <div >
+                                                                            {{form | crispy}}
+                                                    {%csrf_token%}
+                                                                                <div class="col-md-1 text-right">
+                                                                                <button type="submit" class="btn btn-gray-border">Send Comment</button>
+                                                                             </div>
+                                                                    </div>
+                                                                </form>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                        <h3>Login to Comment</h3>
+                                {% endif %}
 
    </body>
   </html>

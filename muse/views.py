@@ -527,6 +527,19 @@ def player(request, song, song_id):
         stream.add(song=song, user=None)
 
     comment_form = CommentForm()
+
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.song = song
+            new_comment.user = request.user
+            new_comment.save()
+
+
+    else:
+        comment_form = CommentForm()
     object_list = song.comments.filter(active=True)
     paginator = Paginator(object_list, 12)
     page = request.GET.get('page')

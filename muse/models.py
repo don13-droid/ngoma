@@ -191,8 +191,7 @@ class Stream(models.Model):
 
 class Comments(models.Model):
     song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name='comments')
-    name = models.CharField(max_length=80)
-    email = models.EmailField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', default=1)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -204,7 +203,7 @@ class Comments(models.Model):
         ordering = ('created',)
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.song}'
+        return f'Comment by {self.user} on {self.song}'
 
     objects = models.Manager()
 

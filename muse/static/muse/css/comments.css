@@ -1,6 +1,6 @@
 .comments-section {
 	padding:50px 0;
-	background-color: #101010;
+	background-color: #252c37;
 }
 
 .comments-section h3 {
@@ -92,6 +92,7 @@ li.comment ol.comment-sub {
 
 .comment-list ol .comment-name {
 	font-weight: 700;
+	color: rgb(220, 59, 59);
 }
 
 .comment-list ol .comment-name span {
@@ -103,19 +104,26 @@ li.comment ol.comment-sub {
 .comment-list ol .comment-name a {
 	font-size: 15px;
 	font-weight: 600;
-	color: rgb(87, 87, 87);
+
 }
 
 .comment-list ol .comment-name a.comment-reply {
 	font-size: 13px;
 	font-weight: 600;
-	color: rgb(131, 21, 21);
+	color: rgb(17, 255, 198);
 }
 
 .comment-list ol .comment-desc {
 	font-size: 13px;
 	margin-bottom: 10px;
-	color: #5A5656;
+	color: #af7474;
+	margin-top: 10px;
+	font-weight: 600;
+}
+.comment-list ol .comment-text {
+	font-size: 13px;
+	margin-bottom: 10px;
+	color: #ffffff;
 	margin-top: 10px;
 	font-weight: 600;
 }
