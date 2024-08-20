@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Song ,Album,\
-    Events, Comments,Sales, SiteData, ArtistProfile, Stream, News_and_Updates, OwnerShip
+    Events, Comments, SiteData, ArtistProfile, Stream,  OwnerShip
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -11,10 +11,7 @@ def order_detail(obj):
 
 
 
-@admin.register(News_and_Updates)
-class UpdatesAdmin(admin.ModelAdmin):
-    list_display = ['title', 'status', 'created']
-    list_filter = ['status', 'created']
+
 
 
 @admin.register(Stream)
@@ -54,19 +51,11 @@ class CommentsAdmin(admin.ModelAdmin):
     list_display = ['user','created','active']
     list_filter = ['created','active']
 
-def make_cleared(modeladmin, request, queryset):
-    queryset.update(cleared=True)
-make_cleared.short_description='Mark selected sales as cleared'
+
 
 def order_pdf(obj):
     url = reverse('orders:admin_order_pdf', args=[obj.id])
     return mark_safe(f'<a href="{url}">PDF</a>')
-@admin.register(Sales)
-class SalesAdmin(admin.ModelAdmin):
-    list_display = ['song','amount','status','created','cleared']
-    list_filter = ['song','amount', 'status','created','cleared']
-    list_editable=['cleared']
-    actions = [make_cleared]
 
 @admin.register(SiteData)
 class SiteDataAdmin(admin.ModelAdmin):

@@ -4,10 +4,19 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import ValidationError,RegexValidator
+from django.utils.translation import gettext_lazy as _
 from mutagen import File
 from mutagen.id3 import APIC
 
+MAX_UPLOAD_SIZE = 20971520  # 20MB in bytes
+MAX_UPLOAD_SIZE_IMAGE = 5242880
+def validate_file_size(value):
+    if value.size > MAX_UPLOAD_SIZE:
+        raise ValidationError(_('File size should not exceed 20MB.'))
 
+def validate_image_size(value):
+    if value.size > MAX_UPLOAD_SIZE_IMAGE:
+        raise ValidationError(_('File size should not exceed 5MB.'))
 class ExtensionValidator(RegexValidator):
     def __init__(self, extensions, message=None):
         if not hasattr(extensions, '__iter__'):
@@ -63,7 +72,7 @@ class ArtistProfile(models.Model):
     choices = (('male','Male'),('female','Female'))
     account_choices = (('basic','basic'),('premium','premium'),('platimum','platimum'))
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile-pictures')
+    profile_picture = models.ImageField(upload_to='profile-pictures', validators=[validate_image_size,])
     genre = models.ForeignKey(Category, related_name='genre_profiles', on_delete=models.CASCADE, default=1)
     phone = models.IntegerField(null=True, blank=True)
     bio = models.TextField(null= True, blank=True)
@@ -121,11 +130,11 @@ class Song(models.Model):
     artist = models.ForeignKey(User,
                                on_delete=models.CASCADE, related_name='song'
                                )
-    features = models.ManyToManyField(User, related_name='features' ,blank=True, null= True)
-    song = models.FileField(upload_to='songs/%Y/%m/%d', blank=False, validators=[ExtensionValidator(['mp3', 'm4a'])])
-    demo = models.FileField(upload_to='demos/%Y/%m/%d', blank=True, null=True, validators=[ExtensionValidator(['mp3', 'm4a'])])
+    features = models.ManyToManyField(User, related_name='features' ,blank=True)
+    song = models.FileField(upload_to='songs/%Y/%m/%d', blank=False, validators=[ExtensionValidator(['mp3', 'm4a']), validate_file_size])
+    demo = models.FileField(upload_to='demos/%Y/%m/%d', blank=True, null=True, validators=[ExtensionValidator(['mp3', 'm4a']),validate_file_size])
     price = models.DecimalField(max_digits=10, decimal_places=2, default=1.00, blank = True)
-    song_art = models.ImageField(upload_to='song_art/%Y/%m/%d')
+    song_art = models.ImageField(upload_to='song_art/%Y/%m/%d', validators=[validate_image_size,])
     song_bio = models.TextField(blank=True)
     status = models.CharField(choices=choices, max_length=50, default='free')
     created = models.DateTimeField(auto_now_add=True)
@@ -207,30 +216,7 @@ class Comments(models.Model):
 
     objects = models.Manager()
 
-class Sales(models.Model):
-    choices = (('approved','Approved'),('pending','Pending'),('rejected','Rejected'))
-    payment_choices = (('Ecocash USD','Ecocash USD'),('Ecocash ZIG','Ecocash ZIG'),('InnBucks','InnBucks'),
-                       ('VISA/Mastercard','VISA/Mastercard'))
-    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name='song_sales')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True ,related_name='user_sales')
-    artist = models.ForeignKey(User, on_delete=models.CASCADE,related_name='sales')
-    email = models.EmailField(default='sales@ingoma.com')
-    phone = models.CharField(max_length=14, null=True)
-    poll_url = models.CharField(max_length=100, null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=1)
-    status = models.CharField(choices=choices, max_length=50, default='approved')
-    created = models.DateTimeField(auto_now_add=True)
-    cleared = models.BooleanField(default=False)
 
-    class Meta:
-        verbose_name = 'sale'
-        verbose_name_plural = 'sales'
-        ordering = ('created',)
-
-    def __str__(self):
-        return f'song bought {self.song} for {self.amount}'
-
-    objects = models.Manager()
 
 class SiteData(models.Model):
     slug = models.SlugField(max_length=100, default='', unique=True)
@@ -245,20 +231,6 @@ class SiteData(models.Model):
         verbose_name_plural = 'site_data'
     objects = models.Manager()
 
-class News_and_Updates(models.Model):
-    choices = (('draft','draft'),('published','published'))
-    title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='news_and_updates/')
-    body = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=11, choices=choices)
-
-    class Meta:
-        verbose_name = 'Update'
-        verbose_name_plural = 'Updates'
-
-    def __str__(self):
-        return self.title
 
 class OwnerShip(models.Model):
     song = models.ManyToManyField(Song, related_name='owner_song')

@@ -41,11 +41,15 @@ class CommentForm(forms.ModelForm):
         fields = ('body',)
 
 class SongUpload(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        super(SongUpload, self).__init__(*args, **kwargs)
+
+        self.fields['album'].queryset = Album.objects.filter(artist=self.user)
     class Meta:
         model = Song
-        fields = ['name','album','genre',
-                  'features','song',
-                  'price','song_art','song_bio','status','released']
+        exclude = ['rating',]
 
 class PayNowForm(forms.Form):
     email = forms.EmailField()

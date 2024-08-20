@@ -26,7 +26,7 @@
                       <tr>
                         <th scope="col">Art</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Genre</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
                       </tr>
@@ -34,16 +34,16 @@
                     <tbody>
                     {%for album in albums%}
                       <tr>
-                        <th scope="row"><a href="{%url 'muse:update-album' pk=album.id%}">
+                        <th scope="row"><a href="{%url 'artist_admin:update-album' pk=album.id%}">
                           {%if album.album_art%}
                           <img src="{{album.album_art.url}}" alt=""></a></th>
                           {%endif%}
-                        <td><a href="{%url 'muse:update-album' pk=album.id%}" class="text-primary fw-bold">{{album.name}}</td>
+                        <td><a href="{%url 'artist_admin:update-album' pk=album.id%}" class="text-primary fw-bold">{{album.name}}</td>
                         <td>{{album.category}}</td>
                         <td>{{album.feature}}</td>
                         <td><div class="icon">
                               <i class="bi bi-trash-fill"></i>
-                              <a href="{%url 'muse:delete_album' pk=album.id%}" class="label">Delete</a>
+                              <a href="" class="label">Delete</a>
                             </div>
                         </td>
                       </tr>

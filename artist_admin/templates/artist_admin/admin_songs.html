@@ -27,7 +27,7 @@
                         <th scope="col">Art</th>
                         <th scope="col">Song</th>
                         <th scope="col">Album</th>
-                        <th scope="col">Plays</th>
+                        <th scope="col">Streams</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
                       </tr>
@@ -35,14 +35,14 @@
                     <tbody>
                     {%for song in songs%}
                       <tr>
-                        <th scope="row"><a href="{%url 'muse:update-song' pk=song.id%}"><img src="{{song.song_art.url}}" alt=""></a></th>
-                        <td><a href="{%url 'muse:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.name}}</td>
+                        <th scope="row"><a href="{%url 'artist_admin:update-song' pk=song.id%}"><img src="{{song.song_art.url}}" alt=""></a></th>
+                        <td><a href="{%url 'artist_admin:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.name}}</td>
                         <td>{{song.album}}</td>
-                        <td class="fw-bold">{{song.plays.count}}</td>
+                        <td class="fw-bold">{{song.streams.count}}</td>
                         <td>{{song.feature}}</td>
                         <td><div class="icon">
                               <i class="bi bi-trash-fill"></i>
-                              <a href="{%url 'muse:delete_song' pk=song.id%}" class="label">Delete</a>
+                              <a href="{%url 'artist_admin:delete_song' pk=song.id%}" class="label">Delete</a>
                             </div>
                         </td>
                       </tr>

@@ -74,7 +74,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{%url 'muse:dashboard'%}">
+        <a class="nav-link " href="{%url 'artist_admin:dashboard'%}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -90,7 +90,7 @@
             </a>
           </li>
           <li>
-            <a href="{%url 'muse:user_sales' id=request.user.id%}">
+            <a href="{%url 'artist_admin:user_sales' id=request.user.id%}">
               <i class="bi bi-circle"></i><span>Transactions</span>
             </a>
           </li>
@@ -102,48 +102,42 @@
         </ul>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="{%url 'muse:dashboard'%}">
+        <a class="nav-link " href="{%url 'artist_admin:dashboard'%}">
           <i class="bi bi-music-player"></i>
           <span>Streams</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'muse:admin_songs'%}">
+        <a class="nav-link" href="{%url 'artist_admin:admin_songs'%}">
           <i class="bi bi-music-note-list"></i>
           <span>Your Songs</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'muse:user-albums'%}">
+        <a class="nav-link" href="{%url 'artist_admin:user-albums'%}">
           <i class="bi bi-collection-play-fill"></i>
           <span>Your Albums</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'muse:song-upload'%}">
+        <a class="nav-link" href="{% url 'artist_admin:song-upload'%}">
           <i class="bi bi-cloud-upload-fill"></i>
           <span>Song Upload</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'muse:add-album'%}">
+        <a class="nav-link" href="{%url 'artist_admin:add-album'%}">
           <i class="bi bi-layer-forward"></i>
           <span>Upload Album</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'muse:user-profile'%}">
+        <a class="nav-link" href="{% url 'artist_admin:user-profile'%}">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link" href="{%url 'muse:ingoma-contract'%}">
-          <i class="bi bi-question-circle"></i>
-          <span>Ingoma Contract</span>
-        </a>
-      </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link" href="{%url 'muse:logout-dashboard' %}">

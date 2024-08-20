@@ -123,7 +123,7 @@
 								<li><a href="{% url 'muse:newsletter' %}">Newsletter</a></li>
 								<li><a href="{%url 'muse:events'%}">Events</a></li>
 								{%if request.user.is_authenticated%}
-								<li><a href="{%url 'muse:dashboard'%}">Dashboard</a></li>
+								<li><a href="{%url 'artist_admin:dashboard'%}">Dashboard</a></li>
 								{%else%}
 								<li><a href="{%url 'muse:login' %}" class="animated fadeIn btn btn-theme">Login</a></li>
 								{%endif%}

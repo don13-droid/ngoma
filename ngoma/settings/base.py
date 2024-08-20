@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     "django.contrib.postgres",
     'social_django',
+    'artist_admin.apps.ArtistAdminConfig'
 
 
 ]
@@ -81,6 +82,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ngoma.wsgi.application'
+# settings.py
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Database
