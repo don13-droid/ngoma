@@ -115,7 +115,7 @@
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav navbar-right">
-								<li><a href="{%url 'muse:category-list'%}">Home</a></li>
+								<li><a href="{%url 'muse:dashboard'%}">Home</a></li>
 								<li><a href="{%url 'muse:ingoma-songs'%}">Songs</a></li>
 								<li><a href="{%url 'muse:all-categories'%}">Genres</a></li>
 								<li><a href="{%url 'muse:ingoma-albums'%}">Albums</a></li>
@@ -123,9 +123,13 @@
 								<li><a href="{% url 'muse:newsletter' %}">Newsletter</a></li>
 								<li><a href="{%url 'muse:events'%}">Events</a></li>
 								{%if request.user.is_authenticated%}
-								<li><a href="{%url 'artist_admin:dashboard'%}">Dashboard</a></li>
-								{%else%}
-								<li><a href="{%url 'muse:login' %}" class="animated fadeIn btn btn-theme">Login</a></li>
+                                    {% if artist_profile %}
+								        <li><a href="{%url 'artist_admin:dashboard'%}">Dashboard</a></li>
+								    {%else%}
+								        <li><a href="{%url 'muse:login' %}" >Create Artist Account</a></li>
+                                    {% endif %}
+                                {% else %}
+                                    <li><a href="{%url 'muse:login' %}" >Login</a></li>
 								{%endif%}
 							</ul>
 						</div><!-- /.navbar-collapse -->

@@ -39,7 +39,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="{%url 'muse:category-list'%}" class="logo d-flex align-items-center">
+      <a href="{%url 'muse:dashboard'%}" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">IngomaAdmin</span>
       </a>
@@ -106,31 +106,40 @@
           <i class="bi bi-music-player"></i>
           <span>Streams</span>
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{%url 'artist_admin:admin_songs'%}">
-          <i class="bi bi-music-note-list"></i>
-          <span>Your Songs</span>
+         <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-music-note-list"></i><span>Songs</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-      </li>
+        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{%url 'artist_admin:admin_songs'%}">
+              <i class="bi bi-circle"></i><span>Your Songs</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'artist_admin:song-upload'%}">
+              <i class="bi bi-cloud-upload-fill"></i><span>Upload Song</span>
+            </a>
+          </li>
+        </ul>
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'artist_admin:user-albums'%}">
-          <i class="bi bi-collection-play-fill"></i>
-          <span>Your Albums</span>
+        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bar-chart"></i><span>Albums</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'artist_admin:song-upload'%}">
-          <i class="bi bi-cloud-upload-fill"></i>
-          <span>Song Upload</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{%url 'artist_admin:add-album'%}">
-          <i class="bi bi-layer-forward"></i>
-          <span>Upload Album</span>
-        </a>
-      </li>
+        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{%url 'artist_admin:user-albums'%}">
+              <i class="bi bi-collection-play-fill"></i><span>Your Albums</span>
+            </a>
+          </li>
+          <li>
+            <a href="{%url 'artist_admin:add-album'%}">
+              <i class="bi bi-layer-forward"></i><span>Upload Album</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Charts Nav -->
+
       <li class="nav-item">
         <a class="nav-link" href="{% url 'artist_admin:user-profile'%}">
           <i class="bi bi-person"></i>
@@ -139,13 +148,15 @@
       </li><!-- End Profile Page Nav -->
 
 
-      <li class="nav-item">
-        <a class="nav-link" href="{%url 'muse:logout-dashboard' %}">
-          <i class="bi bi-arrow-bar-left"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Error 404 Page Nav -->
-
+<li class="nav-item">
+    <form method="post" action="{% url 'muse:logout' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="nav-link" style="background: none; border: none; padding: 0;">
+            <i class="bi bi-arrow-bar-left"></i>
+            <span>Logout</span>
+        </button>
+    </form>
+</li>
     </ul>
 
   </aside><!-- End Sidebar-->

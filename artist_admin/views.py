@@ -10,9 +10,9 @@ import datetime
 from django.db.models import Count, Sum
 from datetime import timedelta
 from muse.models import ArtistProfile, Song, Album, Stream
-from muse.forms import  ProfileForm, AlbumForm, SongUpload
+from muse.forms import  ProfileForm, AlbumForm, SongUpload, ArtistAccountForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib import messages
 @login_required
 def user_profile(request):
     try:
@@ -89,24 +89,12 @@ def add_album(request):
         if form.is_valid():
             cd = form.cleaned_data
             name = cd['name']
-            artist = cd['artist']
-            if Album.objects.filter(name=cd['name'], artist=cd['artist']).exists():
-                header = f'Album "{name}" by "{artist}" already exists'
-                form = AlbumForm()
-                context = {
-                    'form':form
-                }
-                return render(request, 'artist_admin/add_album.html',context)
-            else:
-                new_album = form.save(commit=False)
-                new_album.save()
-                header = f'Album "{name}" successfully added'
-                form = AlbumForm()
-                context = {
-                    'header':header,
-                    'form':form
-                }
-                return render(request,'artist_admin/add_album.html', context)
+            new_album = form.save(commit=False)
+            new_album.artist = request.user
+            new_album.save()
+            header = f'Album "{name}" successfully added'
+            form = AlbumForm()
+
     form = AlbumForm()
     header = 'Upload Album'
     context = {
@@ -283,3 +271,23 @@ def user_sales(request, id):
     }
 
     return render(request, 'artist_admin/sales_list.html',context)
+
+def create_artist_account(request):
+    if request.method == 'POST':
+        form = ArtistAccountForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_artist = form.save(commit=False)
+            new_artist.user = request.user
+            new_artist.save()
+            return render(request, 'artist_admin/index.html')
+        else:
+            print(form.errors)
+
+
+
+    else:
+        form = ArtistAccountForm()
+        context = {
+            'form':form
+        }
+        return render(request, 'artist_admin/create_artist_account.html', context)

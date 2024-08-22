@@ -13,5 +13,6 @@ urlpatterns = [
     path(r'user_sales/(<id>\w+)/', views.user_sales, name='user_sales'),
     path(r'news-update/(<pk>\w+)/', views.updates_page, name='update-page'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('user-albums', views.admin_albums, name='user-albums'),
+    path('user-albums/', views.admin_albums, name='user-albums'),
+    path('create-artist-account/', views.create_artist_account, name='create-artist-account'),
 ]

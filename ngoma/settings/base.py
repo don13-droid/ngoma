@@ -76,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'muse.context_processors.artist_profile'
             ],
         },
     },
@@ -136,5 +137,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 LOGIN_REDIRECT_URL = 'muse:dashboard'
+LOGOUT_REDIRECT_URL = 'muse:dashboard'
+
 LOGIN_URL = 'muse:login'
-LOGOUT_URL = 'muse:logout-dashboard'
+LOGOUT_URL = 'muse:logout'

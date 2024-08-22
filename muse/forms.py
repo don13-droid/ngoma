@@ -15,8 +15,12 @@ class ProfileForm(forms.ModelForm):
 class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        fields = ['name','genre','artist','album_art','about_album']
+        exclude = ['artist','slug', 'rating', 'album_latest']
 
+class ArtistAccountForm(forms.ModelForm):
+    class Meta:
+        model = ArtistProfile
+        exclude = ('user',)
 class SearchForm(forms.Form):
     search = forms.CharField(label='Search',max_length=500)
 

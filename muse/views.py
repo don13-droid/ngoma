@@ -369,9 +369,12 @@ def home(request):
     new_songs = newsongs()[:12]
     # song recommendations for logged on users
     if request.user.is_authenticated:
-        recommendations = ai_recommendation(request.user.id)
-        song_dict = dict(recommendations)
-        recommended_songs = Song.objects.filter(id__in = list(song_dict['song_id']))
+        try:
+            recommendations = ai_recommendation(request.user.id)
+            song_dict = dict(recommendations)
+            recommended_songs = Song.objects.filter(id__in = list(song_dict['song_id']))
+        except:
+            recommended_songs = top_songs
     else:
         recommended_songs = top_songs
 

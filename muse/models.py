@@ -72,7 +72,7 @@ class ArtistProfile(models.Model):
     choices = (('male','Male'),('female','Female'))
     account_choices = (('basic','basic'),('premium','premium'),('platimum','platimum'))
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile-pictures', validators=[validate_image_size,])
+    profile_picture = models.ImageField(upload_to='profile-pictures', validators=[validate_image_size,], null=True)
     genre = models.ForeignKey(Category, related_name='genre_profiles', on_delete=models.CASCADE, default=1)
     phone = models.IntegerField(null=True, blank=True)
     bio = models.TextField(null= True, blank=True)
