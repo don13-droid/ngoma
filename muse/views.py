@@ -6,11 +6,9 @@ from artist_admin.models import Sales
 from django.utils import timezone
 from datetime import timedelta
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, CommentForm, PayNowForm, AlbumForm, ProfileForm,contract_form
-from .forms import SearchForm, SongUpload
+from .forms import UserRegistrationForm, CommentForm, PayNowForm
+from .forms import SearchForm
 from paynow import Paynow
-import time
 from .stream import STREAM
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 import pandas as pd

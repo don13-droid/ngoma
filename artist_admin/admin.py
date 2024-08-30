@@ -2,7 +2,14 @@ import csv
 import datetime
 from django.http import HttpResponse
 from django.contrib import admin
-from .models import Sales, News_and_Updates, Song_Payments
+from .models import Sales, News_and_Updates, Song_Payments, Payouts
+
+@admin.register(Payouts)
+class PayoutAdmin(admin.ModelAdmin):
+    list_display = ['ref_number', 'user', 'amount', 'date']
+    list_filter = ['ref_number', 'user', 'amount', 'date']
+
+
 
 def make_cleared(modeladmin, request, queryset):
     queryset.update(cleared=True)

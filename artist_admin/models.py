@@ -54,3 +54,20 @@ class Song_Payments(models.Model):
 
     def __str__(self):
         return 'Song Payment Updated'
+
+class Payouts(models.Model):
+    ref_number = models.CharField(max_length=22)
+    description = models.CharField(max_length=22)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_payouts')
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_payouts')
+    amount = models.DecimalField(max_digits=11, decimal_places=2)
+    notes = models.TextField(null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        verbose_name = 'Payout'
+        verbose_name_plural = 'Payouts'
+
+    def __str__(self):
+        return F'Payout "{self.ref_number}" created'
