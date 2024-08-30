@@ -26,6 +26,7 @@
                       <tr>
                         <th scope="col">Art</th>
                         <th scope="col">Name</th>
+                          <th scope="col">Songs</th>
                         <th scope="col">Genre</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
@@ -39,7 +40,8 @@
                           <img src="{{album.album_art.url}}" alt=""></a></th>
                           {%endif%}
                         <td><a href="{%url 'artist_admin:update-album' pk=album.id%}" class="text-primary fw-bold">{{album.name}}</td>
-                        <td>{{album.category}}</td>
+                      <td>{{album.album_songs.count}}</td>
+                        <td>{{album.genre}}</td>
                         <td>{{album.feature}}</td>
                         <td><div class="icon">
                               <i class="bi bi-trash-fill"></i>

@@ -13,6 +13,8 @@ from muse.models import ArtistProfile, Song, Album, Stream
 from muse.forms import  ProfileForm, AlbumForm, SongUpload, ArtistAccountForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+
+
 @login_required
 def user_profile(request):
     try:
@@ -182,6 +184,14 @@ def admin_albums(request):
     return render(request,'artist_admin/admin_albums.html',context)
 
 
+
+def artist_payouts(request, id):
+    payouts = Sales.objects.filter(cleared=True)
+    context = {
+        'sales':payouts
+
+    }
+    return render(request, 'artist_admin/payouts.html', context)
 
 def artist_monthly_revenue(artist):
 

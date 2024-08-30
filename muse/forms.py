@@ -53,7 +53,7 @@ class SongUpload(forms.ModelForm):
         self.fields['album'].queryset = Album.objects.filter(artist=self.user)
     class Meta:
         model = Song
-        exclude = ['rating',]
+        exclude = ['rating','slug', 'artist']
 
 class PayNowForm(forms.Form):
     email = forms.EmailField()

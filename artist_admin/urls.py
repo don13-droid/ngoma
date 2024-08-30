@@ -11,6 +11,7 @@ urlpatterns = [
     path(r'delete-song/(<pk>\w+)/', views.delete_song, name='delete_song'),
     path(r'update-song/(<pk>\w+)/', views.update_song, name='update-song'),
     path(r'user_sales/(<id>\w+)/', views.user_sales, name='user_sales'),
+    path(r'user_payouts/(<id>\w+)/', views.artist_payouts, name='payouts'),
     path(r'news-update/(<pk>\w+)/', views.updates_page, name='update-page'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('user-albums/', views.admin_albums, name='user-albums'),

@@ -93,7 +93,7 @@ class Album(models.Model):
     name = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500,
                             unique=True)
-    genre = models.ForeignKey(Category, related_name='albums',
+    genre = models.ForeignKey(Category, related_name='album_genre',
                                  on_delete=models.CASCADE, default='')
     artist = models.ForeignKey(User, on_delete=models.CASCADE, related_name='albums')
     album_art = models.ImageField(upload_to='album_arts')
@@ -124,7 +124,7 @@ class Album(models.Model):
 class Song(models.Model):
     choices = (('free','free'),('purchase','purchase'))
     name = models.CharField(max_length=500)
-    slug = models.SlugField(max_length=500,unique=True, default='')
+    slug = models.SlugField(max_length=500, default='')
     album = models.ForeignKey(Album,on_delete=models.CASCADE,blank=True, null= True, related_name='album_songs')
     genre = models.ForeignKey(Category, related_name='genres', on_delete=models.CASCADE)
     artist = models.ForeignKey(User,
