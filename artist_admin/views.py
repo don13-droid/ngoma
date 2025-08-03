@@ -171,7 +171,8 @@ def add_album(request):
             cd = form.cleaned_data
             name = cd['name']
             new_album = form.save(commit=False)
-            new_album.artist = request.user
+            artist = get_object_or_404(ArtistProfile, user=request.user)
+            new_album.artist = artist
             new_album.save()
             header = f'Album "{name}" successfully added'
             form = AlbumForm()
@@ -248,17 +249,18 @@ def song_upload(request):
     else:
         form = SongUpload(user=request.user)
         header = 'Song Details'
-    context ={
+        context ={
             'header':header,
             'form':form
         }
-    return render(request, 'artist_admin/song_upload.html',context)
+        return render(request, 'artist_admin/song_upload.html',context)
 
 
 
 @login_required
 def admin_albums(request):
-    Albums = Album.objects.filter(artist=request.user.id)
+    artist = get_object_or_404(ArtistProfile, user=request.user)
+    Albums = Album.objects.filter(artist=artist)
     context = {
         'albums':Albums
     }

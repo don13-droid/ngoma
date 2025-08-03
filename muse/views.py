@@ -10,7 +10,6 @@ from datetime import timedelta
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import UserRegistrationForm, CommentForm, PayNowForm
 from .forms import SearchForm
-
 from .stream import STREAM
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -179,14 +178,14 @@ def artists(request):
 
 
 def single_album(request, pk):
-    album_name = get_object_or_404(Album,
+    album = get_object_or_404(Album,
                                    id=pk)
-    songs = Song.published.filter(album=album_name.id)
-    artist = get_object_or_404(ArtistProfile, id=request.user)
-    other_songs = Song.published.filter(artist=artist).exclude(album=album_name.id)[:6]
+    songs = Song.published.filter(album=album.id)
+    artist = get_object_or_404(ArtistProfile, user=album.artist_id)
+    other_songs = Song.published.filter(artist=artist).exclude(album=album.id)[:6]
 
     context = {
-        'album': album_name,
+        'album': album,
         'songs': songs,
         'other_songs': other_songs
     }
@@ -269,10 +268,10 @@ def ingoma_songs(request):
             query = Q()
             for keyword in keywords:
                 query |= Q(song_name__icontains=keyword)
-                query |= Q(artist__username__icontains=keyword)
+                query |= Q(artist__user__username__icontains=keyword)
                 query |= Q(album__name__icontains=keyword)
                 query |= Q(genre__name__icontains=keyword)
-                query |= Q(features__username__icontains=keyword)
+                query |= Q(features__icontains=keyword)
 
             object_list = Song.published.filter(query).distinct()
             paginator = Paginator(object_list, 24)  # 3 posts in each page
@@ -328,7 +327,7 @@ def ingoma_albums(request):
             query = Q()
             for keyword in keywords:
                 query |= Q(name__icontains=keyword)
-                query |= Q(artist__username__icontains=keyword)
+                query |= Q(artist__user__username__icontains=keyword)
                 query |= Q(genre__name__icontains=keyword)
 
             object_list = Album.objects.filter(query)

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Comments, Song, Album, ArtistProfile, User
 from django.forms import TextInput
+from django.shortcuts import get_object_or_404
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -63,7 +64,8 @@ class SongUpload(forms.ModelForm):
 
         super(SongUpload, self).__init__(*args, **kwargs)
 
-        self.fields['album'].queryset = Album.objects.filter(artist=self.user)
+        artist = get_object_or_404(ArtistProfile, user=self.user)
+        self.fields['album'].queryset = Album.objects.filter(artist=artist)
     class Meta:
         model = Song
         exclude = ['rating', 'artist', 'likes', 'play_count']

@@ -31,13 +31,17 @@
                     {% for album in albums %}
                         <div class="artist">
                         {% if album.album_art %}
-                            <a href="{% url 'muse:single-artist' pk=album.artist.id %}">
+                            <a href="{% url 'muse:single-album' pk=album.id %}">
                                 <img src="{{ album.album_art.url }}" alt=""></a>
                         {% else %}
                             <img src="default" alt="">
                         {% endif %}
                             <div class="artist-info">
                                 <a href="{% url 'muse:single-album' pk=album.id %}"><h5>{{ album.name}}</h5></a>
+                                <p>
+                                    <a href="{% url 'muse:single-artist' pk=album.artist_id %}"
+                                           class="artist-link" style="color: #985f0d;">{{ album.artist.display_name|safe }}</a>
+                                </p>
                                 <p>
                                     <i class="fa fa-music" style="color:#FFFFFF;">{{ album.album_songs.count }} songs</i>
 
