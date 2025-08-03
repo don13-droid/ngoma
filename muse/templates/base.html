@@ -14,7 +14,6 @@
 		<!-- Styles -->
 		<!-- Bootstrap CSS -->
 		<link href="{%static 'muse/css/bootstrap.min.css'%}" rel="stylesheet">
-	<link href="{% static 'muse/css/mediaelementplayer.min.css' %}" rel="stylesheet"/>
 		<!-- Animate CSS -->
 		<link href="{%static 'muse/css/animate.min.css'%}" rel="stylesheet">
 		<!-- Basic stylesheet -->
@@ -23,6 +22,7 @@
 		<link href="{%static 'muse/css/font-awesome.min.css'%}" rel="stylesheet">
 		<!-- Custom CSS -->
 		<link href="{%static 'muse/css/style.css'%}" rel="stylesheet">
+<link href="{%static 'muse/css/player.css'%}" rel="stylesheet"/>
 		<link href="{%static 'muse/css/style-color.css'%}" rel="stylesheet">
 
 		<!-- Favicon -->
@@ -117,16 +117,14 @@
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="{%url 'muse:dashboard'%}">Home</a></li>
 								<li><a href="{%url 'muse:ingoma-songs'%}">Songs</a></li>
-								<li><a href="{%url 'muse:all-categories'%}">Genres</a></li>
 								<li><a href="{%url 'muse:ingoma-albums'%}">Albums</a></li>
 								<li><a href="{%url 'muse:billboard'%}">Billboard</a></li>
 								<li><a href="{% url 'muse:newsletter' %}">Newsletter</a></li>
-								<li><a href="{%url 'muse:events'%}">Events</a></li>
 								{%if request.user.is_authenticated%}
                                     {% if artist_profile %}
 								        <li><a href="{%url 'artist_admin:dashboard'%}">Dashboard</a></li>
 								    {%else%}
-								        <li><a href="{%url 'muse:login' %}" >Create Artist Account</a></li>
+								        <li><a href="{%url 'artist_admin:create-artist-account' %}" >Create Artist Account</a></li>
                                     {% endif %}
                                 {% else %}
                                     <li><a href="{%url 'muse:login' %}" >Login</a></li>
@@ -161,16 +159,19 @@ js.cookie.min.js"></script>
 	{% endblock %}
 	});
 </script>
-</body>
-		<script src="{% static 'muse/js/jquery.js'%}"></script>
+        </div></body>
+<script src="{% static 'muse/js/jquery.min.js' %}"></script>
+  <script src="{% static 'muse/js/script.js' %}"></script>
+<script src="{% static 'muse/js/bootstrap.js'%}"></script>
 		<!-- Bootstrap JS -->
 		<script src="{% static 'muse/js/bootstrap.min.js'%}"></script>
 		<!-- WayPoints JS -->
 		<script src="{% static 'muse/js/waypoints.min.js'%}"></script>
 		<!-- Include js plugin -->
 		<script src="{% static 'muse/js/owl.carousel.min.js'%}"></script>
-		<!-- One Page Nav -->
-		<script src="{% static 'muse/js/jquery.nav.js'%}"></script>
+
+<script src="{% static 'muse/js/jquery.nav.js'%}"></script>
+            <script src="{% static 'muse/js/jquery.js'%}"></script>
 		<!-- Respond JS for IE8 -->
 		<script src="{% static 'muse/js/respond.min.js'%}"></script>
 		<!-- HTML5 Support for IE -->

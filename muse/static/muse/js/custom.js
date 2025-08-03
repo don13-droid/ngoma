@@ -115,3 +115,10 @@ $(function(){
 	});
 
 });
+
+document.querySelectorAll('.toggle-replies').forEach(button => {
+	button.addEventListener('click', () => {
+		const replies = button.nextElementSibling;
+		replies.style.display = replies.style.display === 'block' ? 'none' : 'block'
+	});
+});

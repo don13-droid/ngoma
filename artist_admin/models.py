@@ -1,5 +1,8 @@
 from django.db import models
+
 from muse.models import Song, User
+from django.core.cache import cache
+from datetime import datetime, timedelta
 
 class Sales(models.Model):
     choices = (('approved','Approved'),('pending','Pending'),('rejected','Rejected'))
@@ -55,19 +58,22 @@ class Song_Payments(models.Model):
     def __str__(self):
         return 'Song Payment Updated'
 
-class Payouts(models.Model):
-    ref_number = models.CharField(max_length=22)
-    description = models.CharField(max_length=22)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_payouts')
-    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_payouts')
-    amount = models.DecimalField(max_digits=11, decimal_places=2)
-    notes = models.TextField(null=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
 
+def get_artist_streams(user):
+    artist_streams = cache.get('artist_streams')
+    if artist_streams is None:
 
-    class Meta:
-        verbose_name = 'Payout'
-        verbose_name_plural = 'Payouts'
+        cache.set('artist_streams', artist_streams, 60 * 60 * 24)
+    return artist_streams
 
-    def __str__(self):
-        return F'Payout "{self.ref_number}" created'
+def get_best_songs(user):
+    two_weeks_ago = datetime.now() - timedelta(weeks=2)
+    trending_songs = cache.get('best_artist_songs')
+    if trending_songs is None:
+        trending_songs = Song.published.filter(artist=user).annotate(
+            likes_count = models.Count('likes'),
+            streams_count = models.Count('play_count'),
+            score=models.F('likes_count') * 2 + models.F('streams_count')
+        ).order_by('-score')[:10]
+        cache.set('best_artist_songs', trending_songs, 60*60)
+    return trending_songs

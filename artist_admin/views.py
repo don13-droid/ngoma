@@ -1,40 +1,118 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from .models import Sales
-from .models import News_and_Updates
+from .models import News_and_Updates, Sales, get_best_songs
 from django.utils import timezone
 import datetime
 from django.db.models import Count, Sum
+from muse.forms import PayNowForm
 from datetime import timedelta
-from muse.models import ArtistProfile, Song, Album, Stream
-from muse.forms import  ProfileForm, AlbumForm, SongUpload, ArtistAccountForm
+from muse.models import ArtistProfile, Song, Album, Stream, User
+from muse.forms import  UserProfileForm, AlbumForm, SongUpload, ArtistAccountForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+from paynow import Paynow
 
+
+def choose_purchase_opt(request, name, pk):
+    song = get_object_or_404(Song,
+                             name=name,
+                             id=pk)
+    context = {
+        'song':song
+    }
+    return render(request, 'paynow/purchase_option.html',context)
+
+def paynow_transfer(request, pk):
+    song = get_object_or_404(Song,
+                             id=pk)
+    try:
+        site_data = get_object_or_404(SiteData,
+                                      slug='site-data')
+        exchange_rate = site_data.exchange_rate
+        price_in = exchange_rate * song.price
+        price = round(price_in, 2)
+    except:
+        price = 400 * song.price
+    integration_id = '14861'
+    integration_key = 'da597709-1713-4404-af8d-6be150ce3b3c'
+    if request.method == 'POST':
+        form = PayNowForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            amount = cd['amount']
+            email = cd['email']
+            if amount < price:
+                form = PayNowForm()
+                header = f'Amount can not be less than {price}'
+                context = {
+                    'form': form,
+                    'song': song,
+                    'header': header
+                }
+                return render(request, 'paynow/paynow.html', context)
+            else:
+                paynow = Paynow(
+                    integration_id,
+                    integration_key,
+                    'http://127.0.0.1:8000/muse/',
+                    "https://google.com",
+                )
+                payment = paynow.create_payment('Order', email)
+                payment.add(f'{song.id}', amount)
+                response = paynow.send(payment)
+                if response.success:
+                    link = response.redirect_url
+                    poll_url = response.poll_url
+                    new_sale = Sales(song = song,
+                                     user = request.user,
+                                     artist = song.artist,
+                                     email = email,
+                                     poll_url = poll_url,
+                                     amount = amount,
+                                     status = 'pending'
+
+                    ).save()
+                    status = paynow.check_transaction_status(poll_url)
+                    return redirect(link)
+                else:
+                    print('failed')
+    form = PayNowForm()
+    payment_type ='Transfer'
+    header = f'{price}'
+    context = {
+        'header':header,
+        'form':form,
+        'payment_type':payment_type,
+        'song':song
+    }
+    return render(request,'paynow/paynow.html', context)
+@login_required
+def filter():
+    pass
 
 @login_required
 def user_profile(request):
-    try:
-        profile = get_object_or_404(ArtistProfile,
-                                    user=request.user.id)
-    except:
-        profile = None
+
+    profile = get_object_or_404(User,
+                                id=request.user.id)
+
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            new_data= form.save(commit=True)
-            form = ProfileForm(instance=profile)
+            cd = form.cleaned_data
+            new_data = form.save(commit=False)
+            new_data.save()
+            form = UserProfileForm(instance=profile)
             context ={
                 'profile':profile,
                 'form':form
             }
-            return render(request,'admin_panel/profile.html',context)
+            return render(request,'artist_admin/profile.html',context)
+        else:
+            print(form.errors)
 
     else:
-        form = ProfileForm(instance=profile)
+        form = UserProfileForm(instance=profile)
         context = {
             'form':form,
             'profile':profile
@@ -43,7 +121,8 @@ def user_profile(request):
 
 @login_required
 def admin_songs(request):
-    object_list = Song.objects.filter(artist=request.user.id)
+    artist = get_object_or_404(ArtistProfile, user=request.user)
+    object_list = Song.objects.filter(artist=artist)
     paginator = Paginator(object_list, 12)  # 3 posts in each page
     page = request.GET.get('page')
     try:
@@ -109,7 +188,7 @@ def update_song(request, pk):
     instance = get_object_or_404(Song,
                                  id=pk)
     if request.method == 'POST':
-        form = SongUpload(request.POST, request.FILES, instance=instance)
+        form = SongUpload(request.POST, request.FILES, instance=instance, user=request.user)
         if form.is_valid():
             edit = form.save(commit=False)
             edit.save()
@@ -120,8 +199,10 @@ def update_song(request, pk):
                 'form':form
             }
             return render(request, 'artist_admin/song_upload.html', context)
+        else:
+            print(form.errors)
     else:
-        form = SongUpload(instance=instance)
+        form = SongUpload(instance=instance, user=request.user)
         header = 'Edit Song'
         context ={
             'header':header,
@@ -144,17 +225,17 @@ def delete_song(request, pk):
 @login_required
 def song_upload(request):
     if request.method == 'POST':
-        data = get_object_or_404(ArtistProfile,
-                                 user=request.user.id)
+        user = get_object_or_404(ArtistProfile,
+                                 user=request.user)
         form = SongUpload(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             cd = form.cleaned_data
 
             objects = form.save(commit=False)
-            objects.artist = request.user
+            objects.artist = user
             objects.save()
             form = SongUpload()
-            song_name = cd['name']
+            song_name = cd['song_name']
             header = f'Song "{song_name}" uploaded successfully'
             context = {
                 'header': header,
@@ -212,13 +293,6 @@ def artist_total_streams(artist):
     total_streams = Stream.objects.filter(song__in=songs).count()
     return total_streams
 
-def best_perfoming_songs(artist):
-    last_week = timezone.now() - timedelta(days=7)
-    top_songs = Song.objects.filter(artist=artist,
-                                    streams__timestamp__gte=last_week) \
-        .annotate(total_streams=Sum('streams')) \
-        .order_by('-total_streams')[:10]
-    return top_songs
 
 def recent_sales(artist):
     sales = Sales.objects.filter(artist=artist).order_by('-created')[:10]
@@ -229,13 +303,15 @@ def recent_updates():
     return updates[:10]
 @login_required
 def dashboard(request):
-
+    artist = get_object_or_404(ArtistProfile,
+                               user=request.user)
     monthly_revenue = artist_monthly_revenue(request.user.id)
     sales_recent = recent_sales(request.user.id)
     total_streams = artist_total_streams(request.user.id)
     total_comments = Song.objects.filter(artist=request.user.id).aggregate(Count('comments'))
     pr = payable_revenue(request.user.id)
-    top_songs = best_perfoming_songs(request.user.id)
+    top_songs = get_best_songs(artist)
+
 
     updates = recent_updates()
     context={
@@ -283,21 +359,24 @@ def user_sales(request, id):
     return render(request, 'artist_admin/sales_list.html',context)
 
 def create_artist_account(request):
-    if request.method == 'POST':
-        form = ArtistAccountForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_artist = form.save(commit=False)
-            new_artist.user = request.user
-            new_artist.save()
-            return render(request, 'artist_admin/index.html')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = ArtistAccountForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_artist = form.save(commit=False)
+                new_artist.user = request.user
+                new_artist.save()
+                return render(request, 'artist_admin/index.html')
+            else:
+                print('printed errors',form.errors)
+
+
+
         else:
-            print(form.errors)
-
-
-
+            form = ArtistAccountForm()
+            context = {
+                'form':form
+            }
+            return render(request, 'artist_admin/create_artist_account.html', context)
     else:
-        form = ArtistAccountForm()
-        context = {
-            'form':form
-        }
-        return render(request, 'artist_admin/create_artist_account.html', context)
+        return redirect('muse:login')

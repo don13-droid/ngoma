@@ -28,6 +28,8 @@ class STREAM(object):
                 song = song,
                 user = user
             ).save()
+            song.play_count += 1
+            song.save()
 
         else:
             pass

@@ -22,86 +22,32 @@
 								</div>
 							</div>
 					</form>
-					<!-- featured album elements -->
-					 <div class="container">
-        <!-- default heading -->
-        <div class="default-heading">
-            <!-- heading -->
-            <h2>{{genre.name}}</h2>
-        </div>
-        <!-- featured album elements -->
+                </div>
+            </div>
+                    <div class="genre-container">
 
-        <div class="featured-element">
-            <!-- start a new row for every four songs -->
-            {% for song in songs %}
-            {% if forloop.counter0|divisibleby:4 %}
-            <div class="row">
-            {% endif %}
-                <div class="col-md-3 col-sm-6">
-                    <!-- featured item -->
-                    <div class="featured-item ">
-                        <!-- image container -->
-                        <div class="figure-item ">
-                            <!-- image -->
-                            <a href="{% url 'muse:buy-play' song_name=song.name song_id=song.id %}">
-                            <img class="img-responsive" src="{{song.song_art.url}}" alt="" />
-                                </a>
-                        </div>
-                        <!-- featured information -->
-                        <div class="featured-item-info">
-                            <!-- featured title -->
-                            <h5>
-
-                                    {{ song.name }} <a href="{% url 'muse:single-artist' pk=song.artist.id %}">
-                                {{ song.artist }}</a>
-                                {% if song.features.all %}
-                                FT
-                                {% for feature in song.features.all %}
-                                {{ feature }},
-                                {% endfor %}
-                                {% endif %}
-                            </h5>
-                            <span class="label label-theme"> {{ song.streams.count }} Streams</span>
-                            <span class="label label-theme"> {{ song.comments.count }} Comments</span>
+                        <div class="genre-song-grid">
+                            {% for song in songs %}
+                            <div class="genre-song">
+                            <a href="{% url 'muse:play-song' song_id=song.id %}" class="genre-song-info">
+                                <img src="{{ song.song_art.url }}" alt="" class="album-art">
+                            </a>
+                                <div class="genre-song-info">
+                                    <h4>{{ song.song_name }}{% if song.album %} ({{ song.album }}) {% endif %}</h4>
+                                    <p><a href="{% url 'muse:single-artist' pk=song.artist.id %}"
+                                                 class="artist-link"> {{ song.artist.display_name|safe}}</a>
+                                        {% if song.features %}
+                                            <i class="song-features"> ft {{ song.features }}</i>
+                                        {% endif %}
+                                    </p>
+                                    <p>
+                                        <i class="fa fa-headphones"> {{ song.play_count }} streams</i>
+                                        <i class="fa fa-heart"> {{ song.likes.count }} likes</i>
+                                        <i class="fa fa-comment"> {{ song.comments.count }} comments</i>
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-            {% if forloop.counter|divisibleby:4 and not forloop.last %}
-            </div>
-            {% endif %}
-			{%endfor%} >
-            {% if not forloop.counter|divisibleby:4 and forloop.last %}
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-			{% include "pagination.html" with page=songs %}
-		<div class="portfolio pad" id="portfolio">
-					<div class="default-heading">
-						<!-- heading -->
-						<h2>Top Albums in {{category}}</h2>
-					</div>
-				<!-- portfolio -->
-				<div class="portfolio-content" id="portfolioOwl">
-					{%for album in albums%}
-					<div class="item">
-						<!-- item image -->
-						<img class="img-responsive" src="{{album.album_art.url}}" alt="">
-						<!-- transparent background -->
-						<div class="p-transparent"></div>
-						<!-- on mouse hover details -->
-						<div class="p-hover">
-							<!-- heading /title -->
-							<h3>{{album.name}}</h3><hr>
-							<!-- project details -->
-							<p>{{album.about_album}}</p>
-						</div>
-					</div>
-					{%endfor%}
-				<!-- portfolio end -->
-			</div>
-					<div class="text-center">
-					<a href="#" class="btn btn-lg btn-theme">View more</a>
-					</div>
 {%endblock%}

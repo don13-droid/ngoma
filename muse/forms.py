@@ -1,16 +1,17 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Comments, Song, Album, ArtistProfile
+from .models import Comments, Song, Album, ArtistProfile, User
 from django.forms import TextInput
 
-class contract_form(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('profile_picture', 'address', 'phone', 'email', 'about_artist')
+
+class ArtistProfileForm(forms.ModelForm):
     class Meta:
         model = ArtistProfile
-        fields = '__all__'
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = ArtistProfile
-        fields = ['profile_picture','phone','sex']
+        fields = ('verification_status',)
 
 class AlbumForm(forms.ModelForm):
     class Meta:
@@ -31,7 +32,7 @@ class UserRegistrationForm(forms.ModelForm):
                                 widget=forms.PasswordInput)
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'is_artist')
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -39,10 +40,22 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
 
+    def save(self, commit=True):
+        user = super().save(commit=True)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+            
+        return user
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
         fields = ('body',)
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields['body'].widget = forms.Textarea(attrs = {'placeholder': 'post a comment.....'})
 
 class SongUpload(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -53,7 +66,7 @@ class SongUpload(forms.ModelForm):
         self.fields['album'].queryset = Album.objects.filter(artist=self.user)
     class Meta:
         model = Song
-        exclude = ['rating','slug', 'artist']
+        exclude = ['rating', 'artist', 'likes', 'play_count']
 
 class PayNowForm(forms.Form):
     email = forms.EmailField()

@@ -36,6 +36,7 @@
 
   <!-- ======= Header ======= -->
   {%if request.user.is_authenticated%}
+      {% if artist_profile %}
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
@@ -199,7 +200,11 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{artist_profile.profile_picture.url}}" alt="Profile" class="rounded-circle">
+              {% if request.user.profile_picture %}
+                <img src="{{request.user.profile_picture.url}}" alt="Profile" class="rounded-circle">
+                  {% else %}
+                  <img src="" alt="Profile" class="rounded-circle">
+                  {% endif %}
             <span class="d-none d-md-block dropdown-toggle ps-2">{{request.user.username}}</span>
           </a><!-- End Profile Iamge Icon -->
 
@@ -223,9 +228,9 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'muse:password_change' %}">
                 <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
+                <span>Change Password</span>
               </a>
             </li>
             <li>
@@ -338,6 +343,7 @@
 
   </aside><!-- End Sidebar-->
   {%endif%}
+  {% endif %}
 <body>
 {%block content%}
 {%endblock%}
@@ -361,6 +367,6 @@
   <!-- Template Main JS File -->
   <script src="{%static "admin_panel/js/main.js"%}"></script>
 
+</footer>
 </body>
-
 </html>

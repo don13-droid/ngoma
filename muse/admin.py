@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Category, Song ,Album,\
-    Events, Comments, SiteData, ArtistProfile, Stream,  OwnerShip
+from .models import Genre, Song ,Album,\
+     Comments, SiteData, ArtistProfile, Stream,  User, Promotions
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -10,40 +10,35 @@ def order_detail(obj):
     return mark_safe(f'<a href="{url}">View</a>')
 
 
-
-
-
+@admin.register(Promotions)
+class PromotionsAdmin(admin.ModelAdmin):
+    list_display = ['title', 'slot', 'created', 'active']
+    list_filter = ['active']
 
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):
     list_display = ['song']
     list_filter = ['song']
 
-@admin.register(Events)
-class EventsAdmin(admin.ModelAdmin):
-    list_display = ['name','image','event_by','event_date']
-    list_filter = ['event_date']
-    prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ['name', 'artist', 'created','rating','genre', 'album_latest']
-    list_filter = ['name', 'artist','rating', 'created', 'genre']
+    list_display = ['name', 'artist', 'created','rating','genre','released', 'album_latest']
+    list_filter = ['rating', 'created', 'genre','released']
     list_editable = ['album_latest','rating']
     prepopulated_fields = {'slug': ('name',)}
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug','image', 'about_category']
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ['name']
     list_filter = ['name']
-    prepopulated_fields = {'slug': ('name',)}
 
 # Register your models here.
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ['name','slug','genre', 'artist','created']
-    list_filter = ['artist','genre', 'created','album']
-    prepopulated_fields = {'slug': ('name',)}
+    list_display = ['song_name','genre', 'artist','created','is_draft', 'play_count']
+    list_filter = ['genre','is_draft', ]
+
 
 
 @admin.register(Comments)
@@ -61,7 +56,21 @@ def order_pdf(obj):
 class SiteDataAdmin(admin.ModelAdmin):
     list_display = ['slug','exchange_rate']
 
-@admin.register(ArtistProfile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user','phone','sex']
-    list_filter = ['user','sex']
+
+class ArtistProfileInline(admin.StackedInline):
+    model = ArtistProfile
+    can_delete = False
+    verbose_name_plural = 'Artist Profile'
+    fk_name = 'user'
+
+class CustomUserAdmin(admin.ModelAdmin):
+    inlines = (ArtistProfileInline,)
+    list_display = ('username', 'email', 'is_artist', 'is_staff')
+    list_filter = ('is_artist', 'is_staff')
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj or not obj.is_artist:
+            return []
+        return super().get_inline_instances(request, obj)
+
+admin.site.register(User, CustomUserAdmin)

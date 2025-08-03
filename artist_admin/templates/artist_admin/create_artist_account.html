@@ -1,37 +1,8 @@
-{%load static%}
-{%load cache%}
+{%extends 'base_admin.html'%}
 {%load crispy_forms_tags%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{%block title%}{%endblock%}</title>
-    <meta name="description" content="Your description">
-		<meta name="keywords" content="Your,Keywords">
-		<meta name="author" content="Donewell">
-
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Styles -->
-		<!-- Bootstrap CSS -->
-		<link href="{%static 'muse/css/bootstrap.min.css'%}" rel="stylesheet">
-	<link href="{% static 'muse/css/mediaelementplayer.min.css' %}" rel="stylesheet"/>
-		<!-- Animate CSS -->
-		<link href="{%static 'muse/css/animate.min.css'%}" rel="stylesheet">
-		<!-- Basic stylesheet -->
-		<link rel="stylesheet" href="{%static 'muse/css/owl.carousel.css'%}">
-		<!-- Font awesome CSS -->
-		<link href="{%static 'muse/css/font-awesome.min.css'%}" rel="stylesheet">
-		<!-- Custom CSS -->
-		<link href="{%static 'muse/css/style.css'%}" rel="stylesheet">
-		<link href="{%static 'muse/css/style-color.css'%}" rel="stylesheet">
-
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="{% static 'muse/img/logo/favicon.ico'%}">
-</head>
-<body>
-
-
- <main>
+{%block title%}Ingoma-Login{%endblock%}
+{%block content%}
+  <main>
     <div class="container">
 
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -51,8 +22,8 @@
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                    <p class="text-center small">Enter your username & password to login</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Artist Account</h5>
+                    <p class="text-center small">Enter your details to create artist user account</p>
                   </div>
 
                   <form method="post" enctype="multipart/form-data">
@@ -64,18 +35,8 @@
                     <input type="hidden" name="next" value="{{ next }}" />
                     <p>
                       <div class="col-12">
-                        <button class="btn btn-primary w-100" type="post" >Login</button>
+                        <button class="btn btn-primary w-100" type="submit">Login</button>
                       </div>
-                    </p>
-                      <div class="col-12">
-                        <p class="small mb-0">Don't have account? <a href="{%url 'muse:register'%}">Create an account</a></p>
-                      </div>
-                    </p>
-                    </p>
-                      <div class="col-12">
-                        <p class="small mb-0"><a href="{%url 'muse:register'%}">Forgot Password ?</a></p>
-                      </div>
-                    </p>
                   </form>
 
                 </div>
@@ -89,61 +50,4 @@
 
     </div>
   </main><!-- End #main -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/
-jquery.min.js"></script>
-<script>
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/
-js.cookie.min.js"></script>
-<script>
-	var csrftoken = Cookies.get('csrftoken');
-	function csrfSafeMethod(method) {
-		// these HTTP methods do not require CSRF protection
-		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-	}
-	$.ajaxSetup({
-		beforeSend: function(xhr, settings) {
-			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		}
-	});
-	$(document).ready(function(){
-	{% block domready %}
-	{% endblock %}
-	});
-</script>
-</body>
-		<script src="{% static 'muse/js/jquery.js'%}"></script>
-		<!-- Bootstrap JS -->
-		<script src="{% static 'muse/js/bootstrap.min.js'%}"></script>
-		<!-- WayPoints JS -->
-		<script src="{% static 'muse/js/waypoints.min.js'%}"></script>
-		<!-- Include js plugin -->
-		<script src="{% static 'muse/js/owl.carousel.min.js'%}"></script>
-		<!-- One Page Nav -->
-		<script src="{% static 'muse/js/jquery.nav.js'%}"></script>
-		<!-- Respond JS for IE8 -->
-		<script src="{% static 'muse/js/respond.min.js'%}"></script>
-		<!-- HTML5 Support for IE -->
-		<script src="{% static 'muse/js/html5shiv.js'%}"></script>
-		<!-- Custom JS -->
-		<script src="{% static 'muse/js/custom.js'%}"></script>
-<!-- footer -->
-			<footer>
-				<div class="container">
-					<!-- social media links -->
-					<div class="social">
-						<a class="h-facebook" href="#"><i class="fa fa-facebook"></i></a>
-						<a class="h-google" href="#"><i class="fa fa-google-plus"></i></a>
-						<a class="h-linkedin" href="#"><i class="fa fa-linkedin"></i></a>
-						<a class="h-twitter" href="#"><i class="fa fa-twitter"></i></a>
-					</div>
-					<!-- copy right -->
-					<p class="copy-right">&copy; copyright 2022, All rights are reserved.</p>
-				</div>
-			</footer>
-			<!-- footer end -->
-
-			<!-- Scroll to top -->
-			<span class="totop"><a href="#"><i class="fa fa-chevron-up"></i></a></span>
-</html>
+{%endblock%}

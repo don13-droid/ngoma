@@ -1,61 +1,170 @@
 {%extends 'base.html'%}
 {%load crispy_forms_tags%}
+{% load static %}
 
 {%block content%}
 <div id="latestalbum" class="hero pad">
-				<div class="container">
-					<!-- hero content -->
-					<div class="hero-content ">
+<div class="hero-content ">
 						<!-- heading -->
 						<h2>Play Song "{{song.name}}"</h2>
 						<hr>
 						<!-- paragraph -->
 						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
 					</div>
+				<div class="hot-artists-container" >
+					<!-- hero content -->
+
 					<!-- hero play list -->
-						<div class="hero-playlist">
+						<div class="hero-playlist" >
 							<div class="row">
-								<div class="container">
-									<!-- music album image -->
-									<div class="figure">
-										<!-- image -->
-										<img class="img-responsive" src="{{song.song_art.url}}" alt="" />
-									</div>
-									<!-- album details -->
-										<div class="album-details">
-											<!-- title -->
-											<h4>{{song.name}}</h4>
-											<!-- composed by -->
-											<h5>{{song.artist}} {% if song.features.all %}
-													ft
-													{% for feature in song.features.all %}
-													{{ feature }},
-													{% endfor %}
-													{% endif %}
-											</h5>
-											<!-- paragraph -->
-											<p>{{song.streams.count}}+ streams</p>
-											<!--https://www.paynow.co.zw/Payment/Link/?q=c2VhcmNoPWRvbmV3ZWxsaGFydCU0MGdtYWlsLmNvbSZhbW91bnQ9MC4wMCZyZWZlcmVuY2U9Jmw9MA%3d%3d -->
+								<div class="col-md-6 col-sm-6">
+                                    <div class="music-player">
+                                        <div class="album-art">
+                                            <img src="{{ songs.0.song_art.url }}" alt="" class="album-art-image">
+                                            <div class="record-overlay"></div>
+                                        </div>
+                                        <div class="music-controls">
 
-											{%if song.status == 'free'%}
-												<a href="{%url 'muse:paynow-transfer' pk=song.id%}" class="label label-theme">
-													<i class="fa fa-bitcoin"></i>&nbsp;&nbsp;Purchase Now</a>
-												<a href="{{song.get_absolute_url}}" class="label label-theme"><i class="fa fa-play"></i>&nbsp; Play Song</a>
-												<a href="{{song.song.url}}" class="label label-theme"><i class="fa fa-download"></i>&nbsp; Download for Free</a>
-											{%else%}
-												<a href="{%url 'muse:paynow-transfer' pk=song.id%}" class="label label-theme">
-													<i class="fa fa-bitcoin"></i>&nbsp;&nbsp;Purchase Now</a>
-												<a href="{{song.get_absolute_url}}" class="label label-theme"><i class="fa fa-play"></i>&nbsp; Play Demo</a>
-											{%endif%}
+                                            <button class="previous-button">
+                                                <i class="fa fa-fast-backward"></i>
+                                            </button>
+                                            <button class="play-pause-button"
+                                            data-url="{% url 'muse:increment_play_count' %}"
+                                            data-song-id="{{ songs.0.id }}">
+                                                <i class="fa fa-pause"></i>
+                                            </button>
+                                            <button class="next-button">
+                                                <i class="fa fa-fast-forward"></i>
+                                            </button>
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                            <span class="current-time">00:00</span>
+                                            <span class="total-time">00:00</span>
+                                            <span><input type="range" id="volume-control" value="100" max="100"></span>
+                                        </div>
+                                        <div class="music-info">
+                                            <h2 class = 'song-title'>
+                                                {{ songs.0.song_name }}
+                                                {% if songs.0.album %}
+                                                ({{ songs.0.album }})
+                                                {% endif %}
+                                            </h2>
+                                            <p class="artist-name">{{ songs.0.artist.display_name|safe}}
+                                                {% if songs.0.features %}
+                                                <i class="song-features"> ft {{ songs.0.features }}</i>
+                                                {% endif %}
+                                            </p>
+                                        <p><button class="song-like-button"
+                                                   data-url="{% url 'muse:increment_song_likes' %}"
+                                            data-song-id="{{ songs.0.id }}">
+                                            {% if request.user in songs.0.likes.all %}
+                                        <i class="fa fa-heart" style="color: red;">
+                                            {{ songs.0.likes.count }}like
+                                                {% else %}
+                                                <i class="fa fa-heart">{{ songs.0.likes.count }}like
+                                        {% endif %}</i></button>
+                                            <i class="fa fa-headphones"> {{ songs.0.play_count }}streams</i>
 
+                                          <i class="fa fa-calendar"> {{ songs.0.created }}</i>
 
-
-										</div>
-
+                                        </p>
+                                        </div>
+                                        <audio id="music-audio" src="{{ songs.0.song_file.url }}" type="audio/mpeg">Volume</audio>
+                                    </div>
 								</div>
+								<div class="col-md-6 col-sm-6">
 
+								<div class="comment-section">
+                                    <div class="comment-header">
+                                        <h4 class="comment-text"> ({{ comments.count }}) comments</h4>
+                                    </div>
+
+                                    {% for comment in comments %}
+                                    <div class="comment">
+                                        <div class="user-profile">
+                                            {% if comment.user.user.profile_picture %}
+                                                <img src="{{ comment.user.user.profile_picture.url }}" class="profile-picture">
+                                            {% else %}
+                                                <img src="default" class="profile-picture">
+                                            {% endif %}
+                                        </div>
+                                        <div class="comment-content">
+                                            <div class="comment-header">
+                                                <span class="username">{{ comment.user.display_name|safe}}</span>
+                                                <span class="date">{{ comment.created}}</span>
+                                            </div>
+                                            <p class="comment-text">{{ comment.body}}</p>
+                                            <div class="comment-actions">
+                                                <button class="like-button"
+                                                data-comment-url="{% url 'muse:increment_comment_likes' %}"
+                                                data-comment-id="{{ comment.id }}">
+
+                                                    {% if request.user in comment.likes.all %}
+                                                         <i class="fa fa-heart" style="color: red;"></i>
+                                                    <small>{{ comment.likes.count }}</small>
+                                                    {% else %}
+                                                        <i class="fa fa-heart"></i>
+                                                    <small>{{ comment.likes.count }}</small>
+                                                    {% endif %}
+                                                </button>
+                                                <div class="like-button">
+                                                    <i class="fa fa-comment"></i>
+                                                    <small>{{ comment.replies.count }}</small>
+                                                </div>
+
+                                            </div>
+                                            {% if comment.replies.all %}
+                                                <div class="replies" style="display: none;">
+                                                {% for reply in comment.replies.all %}
+                                                    <div class="reply">
+                                                        <div class="reply-header">
+                                                            <img src="{{ reply.user.profile_picture.url }}" alt="">
+                                                            <span class="username">{{ reply.user.display_name|safe}}</span>
+                                                            <span class="date">{{reply.created}}</span>
+                                                        </div>
+                                                        <p class="comment-text">{{ reply.body}}</p>
+                                                        <div class="comment-actions">
+                                                            <div class="like-button">
+                                                                <i class="bi bi-heart"></i>
+                                                                <small>0</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}]
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+								</div>
+                                {% if request.user.is_authenticated %}
+                                    <form method="post">
+                                        <div class="form-group">
+                                            {% csrf_token %}
+                                            {{ form | crispy }}
+                                            <input type="hidden" name="next" value="{{ next }}" />
+                                            <button type="submit" class="post-reply-button">Post</button>
+                                        </div>
+                                    </form>
+                                {% else %}
+                                        <p><b><a href="{% url 'muse:login' %}">Login</a>
+                                        </b>to post comments or <a href="{% url 'muse:register' %}">Create Account</a></p>
+                                {% endif %}
 							</div>
 						</div>
 				</div>
 			</div>
+
+    <script>
+        let songs = [
+            {% for song in songs %}
+            {
+               title: '{{ song.song_name }}',
+               artist: '{{ song.artist }}',
+               src: '{{ song.song_file.url }}',
+               albumart: '{{ song.song_art.url }}'
+            },
+            {% endfor %}
+        ];
+    </script>
+</div>
 {%endblock%}

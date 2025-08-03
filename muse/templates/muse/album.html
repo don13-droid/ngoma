@@ -5,13 +5,6 @@
 <div id="latestalbum" class="hero pad">
 				<div class="container">
 					<!-- hero content -->
-					<div class="hero-content ">
-						<!-- heading -->
-						<h2>Top Albums</h2>
-						<hr>
-						<!-- paragraph -->
-						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
-					</div>
 <div class="featured pad" id="featuredalbum">
 				<div class="container">
 					<!-- default heading -->
@@ -30,42 +23,36 @@
 							</div>
 
 					</form>
-					<!-- featured album elements -->
-					<div class="featured-element">
-						{%for album in albums%}
-						{% if forloop.counter0|divisibleby:4 %}
-						<div class="row">
-							{% endif %}
-							<div class="col-md-3">
-								<!-- featured item -->
-								<div class="featured-item ">
-									<!-- image container -->
-									<div class="figure-item">
-										<!-- image -->
-										<img class="img-responsive" src="{{album.album_art.url}}" alt="" />
-										<!-- paragraph -->
-										<p>{{album.artist}}
-											<span class="label label-theme"> {{album.album_songs.count}} Songs</span>
-										</p>
-									</div>
-									<!-- featured information -->
-									<div class="featured-item-info">
-										<!-- featured title -->
-										<h5>
-											<a href="{{album.get_absolute_url}}"> {{album.name}}</a>
-										</h5>
-										<!-- horizontal line -->
-										<hr />
-									</div>
-								</div>
-							</div>
+                </div>
+                <div class="heading-container">
+                    <h4>Hot Right Now</h4>
+                </div>
+                <div class="artist-grid">
+                    {% for album in albums %}
+                        <div class="artist">
+                        {% if album.album_art %}
+                            <a href="{% url 'muse:single-artist' pk=album.artist.id %}">
+                                <img src="{{ album.album_art.url }}" alt=""></a>
+                        {% else %}
+                            <img src="default" alt="">
+                        {% endif %}
+                            <div class="artist-info">
+                                <a href="{% url 'muse:single-album' pk=album.id %}"><h5>{{ album.name}}</h5></a>
+                                <p>
+                                    <i class="fa fa-music" style="color:#FFFFFF;">{{ album.album_songs.count }} songs</i>
 
-						{% if forloop.counter|divisibleby:4 and not forloop.last %}
-						</div>
-						{% endif %}
-						{%endfor%}
-					</div>
+                                    <i class="fa fa-headphones" style="color: #FFFFFF;">{{ album.songs.streams.count }} streams</i>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+			<hr>
 				</div>
-			</div>
+</div>
+
+
 					{% include "pagination.html" with page=albums %}
 {%endblock%}

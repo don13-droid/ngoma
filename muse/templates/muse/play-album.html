@@ -12,55 +12,50 @@
 						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
 					</div>
 					<!-- hero play list -->
-					<div class="hero-playlist">
-						<div class="row">
-							<div class="col-md-6 col-sm-6">
-								<!-- music album image -->
-								<div class="figure">
-									<!-- image -->
-									<img class="img-responsive" src="{{album.album_art.url}}" alt="" />
-									<!-- disk image -->
-									{%if site_data.disk_image%}
-									<img class="img-responsive disk" src="{{site_data.disk_image.url}}" alt="" />
-									{%endif%}
-								</div>
-								<!-- album details -->
-								<div class="album-details">
-									<!-- title -->
-									<h4>{{album.name}}</h4>
-									<!-- composed by -->
-									<h5>{{album.artist}}</h5>
-									<!-- paragraph -->
-									<p>{{album.about_album}}.</p>
-									<hr>
-									</div>
-							</div>
-							<div class="col-md-6 col-sm-6">
-								<!-- play list -->
-								<div class="playlist-content">
-									<ul class="list-unstyled">
-										{%for song in songs%}
-										<li class="playlist-number">
-											<!-- song information -->
-											<div class="song-info">
-												<!-- song title -->
-												<h4>{{song.name}}</h4>
-												<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp; <strong>Type</strong>:
-													{{song.category}} &nbsp;|&nbsp; <strong>Artist</strong>: {{song.artist}}</p>
-											</div>
-											<!-- music icon -->
-											<div class="music-icon">
-												<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
-												<a href="#"><i class="fa fa-pause"></i></a>
-											</div>
-											<div class="clearfix"></div>
-										</li>
-										{%endfor%}
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
+					<div class="playlist-container">
+        <div class="top-song">
+            <div class="song-art">
+                <img src="{{ promotions.0.image.url }}" alt="">
+                <div class="song-details">
+                    <h4>{{ promotions.0.title }}</h4>
+                    <p><i>{{ promotions.0.body }}</i></p>
+
+                </div>
+            </div>
+        </div>
+        <div class="song-list">
+            <ul>
+                {% for song in top_songs %}
+                <li>
+                    <a href="{% url 'muse:play-song' song_id=song.id %}"><img src="{{ song.song_art.url }}" /></a>
+                    <div class="song-info">
+                        <b>
+                            (#{{ forloop.counter }}) {{ song.song_name | capfirst}} </b>
+                        {% if song.movement == 'up' %}
+                            <i class="fa fa-arrow-up" style="color: green;">{{ song.movement_amount }}</i>
+                        {% elif song.movement == 'down' %}
+                            <i class="fa fa-arrow-down" style="color: darkred;">{{ song.movement_amount }}</i>
+                        {% elif song.movement == 'same' %}
+                            <i class="fa fa-minus" style="color: gray;">{{ song.movement_amount }}</i>
+                        {% elif song.movement == 'new' %}
+                            <i class="fa fa-arrow-up" style="color: dodgerblue;">{{ song.movement_amount }}</i>
+                        {% endif %}
+                        <p><i>
+                            {{song.artist.display_name|safe}}</i>
+                            {% if song.features %} <i class="song-features"> ft {{ song.features }}</i> {% endif %}
+                        </p>
+                    <p><i class="fa fa-heart"> {{song.likes.count}}</i>
+                        <i class="fa fa-headphones" > {{song.streams.count}}</i>
+                        <i class="fa fa-comment"> {{ song.comments.count }}</i>
+                    </p>
+                    </div>
+                    <a href="{% url 'muse:play-song' song_id=song.id %}"><i class="fa fa-play"></i></a>
+                </li>
+
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 				</div>
 			</div>
 			<!--/ hero end -->

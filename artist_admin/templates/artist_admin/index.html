@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Monthly Revenue <span>| Today</span></h5>
+                  <h5 class="card-title">Total Revenue <span>| Today</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -123,60 +123,6 @@
 
             <!-- Reports -->
 
-            <!-- Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Song</th>
-                        <th scope="col">Invoice</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {%for sale in sales%}
-                      <tr>
-                        <th scope="row"><a href="#">{{sale.id}}</a></th>
-                        <td>{{sale.song}}</td>
-                        <td><a href="#" class="text-primary">Invoice</a></td>
-                        <td>ZIG{{sale.amount}}</td>
-                        <td>{{sale.created}}</td>
-                        {%if cleared%}
-                        <td><span class="badge bg-success">Withdrawn</span></td>
-                        {%else%}
-                        <td><span class="badge bg-danger">Outstanding</span></td>
-                        {%endif%}
-                      </tr>
-                     {%endfor%}
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Recent Sales -->
-
             <!-- Top Selling -->
             <div class="col-12">
               <div class="card top-selling overflow-auto">
@@ -211,8 +157,8 @@
                     {%for song in top_songs%}
                       <tr>
                         <th scope="row"><a href="#"><img src="{{song.song_art.url}}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">{{song.name}}</a></td>
-                        <td>{{song.streams.count}}</td>
+                        <td><a href="{{ song.song_file.url }}" class="text-primary fw-bold">{{song.song_name}}</a></td>
+                        <td>{{song.play_count}}</td>
                         <td class="fw-bold">{{song.created}}</td>
                         <td>{{song.rating}}</td>
                       </tr>
@@ -251,7 +197,7 @@
                 {%for update in updates%}
                 <div class="post-item clearfix">
                   <img src="{{update.image.url}}" alt="">
-                  <h4><a href="{%url 'muse:update-page' pk=update.id%}">{{update.title}}</a></h4>
+                  <h4><a href="{%url 'artist_admin:update-page' pk=update.id%}">{{update.title}}</a></h4>
                   <p>{{update.body |truncatewords:20|linebreaks}}</p>
                 </div>
                 {%endfor%}

@@ -12,59 +12,52 @@
 						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
 					</div>
 					<!-- hero play list -->
-						<div class="hero-playlist">
-							<div class="row">
-								<div class="col-md-6 col-sm-6">
-									<!-- music album image -->
-									<div class="figure">
-										<!-- image -->
-										<img class="img-responsive" src="{{artist.profile_picture.url}}" alt="" />
-									</div>
-									<!-- album details -->
-										<div class="album-details">
-											<!-- title -->
-											<h4>{{artist.user}}</h4>
-											<!-- composed by -->
-											<h5>
-												<span class="label label-theme"> {{ total_songs }} songs</span>
-												<span class="label label-theme"> {{ total_streams }}+ streams</span>
-											</h5>
-											<!-- paragraph -->
-											<p>{{artist.bio}}</p>
-											<!-- button -->
-
-										</div>
-
-								</div>
-								<div class="col-md-6 col-sm-6">
-									<!-- play list -->
-									{%for song in top_songs%}
-
-								<div class="playlist-content">
-										<ul class="list-unstyled">
-
-											<li class="playlist-number">
-												<div class="song-info">
-													<!-- song title -->
-													<h4>#{{forloop.counter}} {{song.name}}</h4>
-													<p><strong>Album</strong>: {{song.album}} &nbsp;|&nbsp;
-														<strong>Type</strong>: {{song.category}} &nbsp;|&nbsp;
-														<strong>Artist</strong>:{{song.artist}}</p>
-												</div>
-												<!-- music icon -->
-												<div class="music-icon">
-													<a href="{%url 'muse:buy-play' song_name=song.name song_id=song.id%}"><i class="fa fa-play"></i></a>
-													<a href="#"><i class="fa fa-pause"></i></a>
-												</div>
-												<div class="clearfix"></div>
-											</li>
-										</ul>
-									</div>
-									{%endfor%}
-								</div>
-							</div>
-						</div>
 				</div>
 			</div>
 			<!--/ hero end -->
+    <div class="artist-header">
+    <div class="artist-image">
+        {% if artist.user.profile_picture %}
+        <img src="{{ artist.user.profile_picture.url }}" alt="">
+            {% else %}
+            <img src="" alt="">
+        {% endif %}
+    </div>
+    <div class="artist-information">
+        <h1 class="artist-name">{{ artist.display_name |safe}}</h1>
+        <p class="artist-bio">{{ artist.user.about_artist}}</p>
+        <p>
+            <button class="follow-button"><i class="fa fa-facebook-official"></i> </button>
+            <button class="follow-button"><i class="fa fa-twitter"></i> </button>
+            <button class="follow-button"><i class="fa fa-youtube"></i> </button>
+            <button class="follow-button"><i class="fa fa-instagram"></i> </button>
+            <button class="follow-button"><i class="fa fa-whatsapp"></i> </button>
+        </p>
+    </div>
+    </div>
+    <div class="artist-top-songs">
+    <h2>Best Songs</h2>
+    <ul>
+        {% for song in top_songs %}
+        <li>
+            <div class="artist-song-info">
+                <img src="{{ song.song_art.url }}" alt="" class="artist-album-art">
+                <div class="artist-song-details">
+                    <span class="artist-song-title">{{ song.song_name}} {% if song.album %}({{ song.album }}) {% endif %}</span>
+                    <span class=artist-song-artist>{{ song.artist.display_name|safe}}
+                                        {% if song.features %}
+                                            <i class="song-features"> ft {{ song.features }}</i>
+                                        {% endif %}
+                    </span>
+                <p>
+                    <i class="fa fa-headphones"> {{ song.play_count }} streams</i>
+                    <i class="fa fa-heart"> {{ song.likes.count }} likes</i>
+                    <i class="fa fa-comment"> {{ song.comments.count }} comments</i>
+                </p>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    </div>
 {%endblock%}

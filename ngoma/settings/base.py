@@ -34,6 +34,7 @@ SESSION_COOKIE_AGE = 1200
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     "django.contrib.postgres",
     'social_django',
-    'artist_admin.apps.ArtistAdminConfig'
+    'artist_admin.apps.ArtistAdminConfig',
+
 
 
 ]
@@ -97,7 +99,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
+AUTH_USER_MODEL = 'muse.User'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -130,7 +132,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'

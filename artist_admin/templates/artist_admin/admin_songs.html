@@ -28,6 +28,7 @@
                         <th scope="col">Song</th>
                         <th scope="col">Album</th>
                         <th scope="col">Streams</th>
+                          <th scope="col">Released</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
                       </tr>
@@ -36,10 +37,15 @@
                     {%for song in songs%}
                       <tr>
                         <th scope="row"><a href="{%url 'artist_admin:update-song' pk=song.id%}"><img src="{{song.song_art.url}}" alt=""></a></th>
-                        <td><a href="{%url 'artist_admin:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.name}}</td>
+                        <td><a href="{%url 'artist_admin:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.song_name}}</td>
                         <td>{{song.album}}</td>
-                        <td class="fw-bold">{{song.streams.count}}</td>
+                        <td class="fw-bold">{{song.play_count}}</td>
                         <td>{{song.feature}}</td>
+                          {% if song.is_draft %}
+                              <td>{{song.released}}</td>
+                              {% else %}
+                           <td><button type="button" class="btn btn-warning">Draft</button></td>
+                          {% endif %}
                         <td><div class="icon">
                               <i class="bi bi-trash-fill"></i>
                               <a href="{%url 'artist_admin:delete_song' pk=song.id%}" class="label">Delete</a>
