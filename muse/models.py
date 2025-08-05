@@ -80,6 +80,8 @@ class ArtistProfile(models.Model):
             return 'silver'
         elif self.verification_status == 'bronze':
             return 'gold'
+        else:
+            return None
 
     @property
     def verification_icon(self):
