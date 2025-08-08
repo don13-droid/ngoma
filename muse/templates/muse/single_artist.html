@@ -41,7 +41,8 @@
         {% for song in top_songs %}
         <li>
             <div class="artist-song-info">
-                <img src="{{ song.song_art.url }}" alt="" class="artist-album-art">
+                <a href="{% url 'muse:play-song' song_id=song.id %}">
+                <img src="{{ song.song_art.url }}" alt="" class="artist-album-art"></a>
                 <div class="artist-song-details">
                     <span class="artist-song-title">{{ song.song_name}} {% if song.album %}({{ song.album }}) {% endif %}</span>
                     <span class=artist-song-artist>{{ song.artist.display_name|safe}}

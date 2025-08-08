@@ -6,6 +6,14 @@ body {
   padding: 20px;
 }
 
+.caption {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+  padding: 20px;
+    }
+
 .player-container {
   display: flex;
   flex-direction: row;
@@ -17,10 +25,12 @@ body {
   background: #252525;
   padding: 20px;
   border-radius: 8px;
+
 }
 
 .album-art img {
   width: 100%;
+  height: 500px;
   border-radius: 8px;
 }
 
@@ -40,6 +50,8 @@ body {
 .playlist ul {
   list-style: none;
   padding: 0;
+  max-height: 200px;
+  overflow-y: scroll;
 }
 
 .playlist li {
@@ -56,7 +68,7 @@ body {
   background: #1f1f1f;
   padding: 20px;
   border-radius: 8px;
-    max-height: 400px;
+  max-height: 500px;
   overflow-y: scroll;
 }
 
@@ -95,4 +107,63 @@ body {
 
 .hidden {
   display: none;
+}
+
+.recommended {
+  margin-top: 30px;
+}
+
+.recommended h4 {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#recommendedList {
+  list-style: none;
+  padding: 0;
+}
+
+#recommendedList li {
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+#recommendedList li:hover {
+  background-color: #3a3a3a;
+}
+
+.rec-cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.rec-info {
+  flex: 1;
+}
+
+.rec-title {
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+}
+
+.rec-artist {
+  color: #aaa;
+  margin: 0;
+}
+
+.rec-play {
+  background: none;
+  border: none;
+  color: #00acee;
+  font-size: 18px;
+  cursor: pointer;
 }

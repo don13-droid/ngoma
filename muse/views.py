@@ -106,38 +106,47 @@ def increment_comment_likes(request):
             comment.likes.add(request.user)
     return JsonResponse({'status':'error'})
 
+def play_album(request, album_id):
+    album = get_object_or_404(Album, id=album_id)
+    songs_in_album = Song.published.filter(album=album)
+    if request.user.is_authenticated:
+        recommended_songs = recommend_songs(request.user)
+    else:
+        recommended_songs = []
+
+    form = CommentForm()
+    context = {
+        'recommended_songs': recommended_songs,
+        'songs': songs_in_album,
+        'form': form,
+
+    }
+    return render(request, 'muse/play.html', context=context)
+
+
 def play_song(request, song_id):
     song = get_object_or_404(Song,
                              id=song_id)
+    if request.user.is_authenticated:
+        recommended_songs = recommend_songs(request.user)
+    else:
+        recommended_songs = []
     top_songs = list(Song.published.filter(artist=song.artist))
     if song in top_songs:
         top_songs.remove(song)
     top_songs.insert(0, song)
+    #recommended = Song.published.exclude(id__in=[s.id for s in top_songs])[:5]
     comments = song.comments.filter(active=True, parent=None).prefetch_related('replies')
 
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        user = get_object_or_404(ArtistProfile,
-                                 user=request.user)
-        if form.is_valid():
-            reply = form.save(commit=False)
-            reply.user = user
-            reply.song = song
-            reply.save()
-            context = {
-                'songs':top_songs[:5],
-                'form': form,
-                'comments': comments
-            }
-            return render(request, 'muse/play.html', context=context)
-    else:
-        form = CommentForm()
-        context = {
+
+    form = CommentForm()
+    context = {
+            'recommended_songs':recommended_songs,
             'songs':top_songs,
             'form':form,
             'comments': comments
         }
-        return render(request, 'muse/play.html', context=context)
+    return render(request, 'muse/play.html', context=context)
 
 
 def home(request):

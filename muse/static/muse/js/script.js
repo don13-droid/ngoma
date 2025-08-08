@@ -18,6 +18,12 @@ function loadSong(index) {
   audio.load();
 }
 
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift()
+}
+
 loadSong(currentIndex);
 
 playBtn.addEventListener('click', () => {
@@ -43,11 +49,13 @@ songList.addEventListener('click', e => {
 
 // Like buttons AJAX
 document.querySelectorAll('.like-comment').forEach(button => {
+  const csrftoken = getCookie('csrftoken')
   button.addEventListener('click', () => {
     fetch(button.dataset.url, {
       method: 'POST',
       body: JSON.stringify({ comment_id: button.dataset.id }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,}
     })
     .then(res => res.json())
     .then(data => {
@@ -62,6 +70,18 @@ document.querySelectorAll('.toggle-replies').forEach(btn => {
     const replies = btn.closest('.comment').querySelector('.replies');
     replies.classList.toggle('hidden');
     btn.textContent = replies.classList.contains('hidden') ? 'View Replies' : 'Hide Replies';
+  });
+});
+
+document.querySelectorAll('.rec-play').forEach(button => {
+  button.addEventListener('click', (e) => {
+    const parent = button.closest('li');
+    const src = parent.getAttribute('data-src');
+    audio.src = src;
+    audio.play();
+    songTitle.textContent = parent.querySelector('.rec-title').textContent;
+    artistName.textContent = parent.querySelector('.rec-artist').textContent;
+    albumArt.src = parent.querySelector('.rec-cover').src;
   });
 });
 

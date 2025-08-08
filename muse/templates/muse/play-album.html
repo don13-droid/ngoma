@@ -6,91 +6,58 @@
 					<!-- hero content -->
 					<div class="hero-content ">
 						<!-- heading -->
-						<h2>{{album.name}}</h2>
+						<h2>{{artist.user}}</h2>
 						<hr>
 						<!-- paragraph -->
 						<p>We sing the best <strong class="theme-color">Songs</strong> and now we control the world best <strong class="theme-color">Music</strong>.</p>
 					</div>
 					<!-- hero play list -->
-					<div class="playlist-container">
-        <div class="top-song">
-            <div class="song-art">
-                <img src="{{ promotions.0.image.url }}" alt="">
-                <div class="song-details">
-                    <h4>{{ promotions.0.title }}</h4>
-                    <p><i>{{ promotions.0.body }}</i></p>
-
-                </div>
-            </div>
-        </div>
-        <div class="song-list">
-            <ul>
-                {% for song in top_songs %}
-                <li>
-                    <a href="{% url 'muse:play-song' song_id=song.id %}"><img src="{{ song.song_art.url }}" /></a>
-                    <div class="song-info">
-                        <b>
-                            (#{{ forloop.counter }}) {{ song.song_name | capfirst}} </b>
-                        {% if song.movement == 'up' %}
-                            <i class="fa fa-arrow-up" style="color: green;">{{ song.movement_amount }}</i>
-                        {% elif song.movement == 'down' %}
-                            <i class="fa fa-arrow-down" style="color: darkred;">{{ song.movement_amount }}</i>
-                        {% elif song.movement == 'same' %}
-                            <i class="fa fa-minus" style="color: gray;">{{ song.movement_amount }}</i>
-                        {% elif song.movement == 'new' %}
-                            <i class="fa fa-arrow-up" style="color: dodgerblue;">{{ song.movement_amount }}</i>
-                        {% endif %}
-                        <p><i>
-                            {{song.artist.display_name|safe}}</i>
-                            {% if song.features %} <i class="song-features"> ft {{ song.features }}</i> {% endif %}
-                        </p>
-                    <p><i class="fa fa-heart"> {{song.likes.count}}</i>
-                        <i class="fa fa-headphones" > {{song.streams.count}}</i>
-                        <i class="fa fa-comment"> {{ song.comments.count }}</i>
-                    </p>
-                    </div>
-                    <a href="{% url 'muse:play-song' song_id=song.id %}"><i class="fa fa-play"></i></a>
-                </li>
-
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
 				</div>
 			</div>
 			<!--/ hero end -->
-<div class="portfolio pad" id="portfolio">
-				<div>
-					<!-- default heading -->
-					<div class="default-heading">
-						<!-- heading -->
-						<h2>OTHER SONGS BY {{album.artist}}</h2>
-					</div>
-				</div>
-				<!-- portfolio -->
-				<div class="portfolio-content" id="portfolioOwl">
-					{%for song in other_songs%}
-					<div class="item">
-						<!-- item image -->
-						<img class="img-responsive" src="{{song.song_art.url}}" alt="">
-						<!-- transparent background -->
-						<div class="p-transparent"></div>
-						<!-- on mouse hover details -->
-						<div class="p-hover">
-							<!-- heading /title -->
-							<h3>{{song.name}}</h3><hr>
-							<!-- project details -->
-							<p>{{song.album}}</p>
-							<p>{{song.about_song}}</p>
-							<!-- icon -->
-							<a href=""><i class="fa fa-share"></i></a>
-						</div>
-					</div>
-					{%endfor%}
-				</div>
-				<div class="text-center">
-					<a href="#" class="btn btn-lg btn-theme">View more</a>
-				</div>
-				<!-- portfolio end -->
-			</div>
+    <div class="artist-header">
+    <div class="artist-image">
+        {% if album.album_art %}
+        <img src="{{ album.album_art.url }}" alt="">
+            {% else %}
+            <img src="" alt="">
+        {% endif %}
+    </div>
+    <div class="artist-information">
+        <h1 class="artist-name">{{ album.name}}</h1>
+        <p class="artist-bio">{{ album.about_album}}</p>
+        <p style="padding-top: 10px;">
+            <a href="{% url 'muse:play_album' album_id=album.id %}" class="follow-button"><i class="fa fa-play"></i> </a>
+
+
+
+        </p>
+    </div>
+    </div>
+    <div class="artist-top-songs">
+    <h2>{{ songs.count }} Songs</h2>
+    <ul>
+        {% for song in songs %}
+        <li>
+            <div class="artist-song-info">
+            <a href="{% url 'muse:play-song' song_id=song.id %}">
+                <img src="{{ song.song_art.url }}" alt="" class="artist-album-art"></a>
+                <div class="artist-song-details">
+                    <span class="artist-song-title">{{ song.song_name}} {% if song.album %}({{ song.album }}) {% endif %}</span>
+                    <span class=artist-song-artist>{{ song.artist.display_name|safe}}
+                                        {% if song.features %}
+                                            <i class="song-features"> ft {{ song.features }}</i>
+                                        {% endif %}
+                    </span>
+                <p>
+                    <i class="fa fa-headphones"> {{ song.play_count }} streams</i>
+                    <i class="fa fa-heart"> {{ song.likes.count }} likes</i>
+                    <i class="fa fa-comment"> {{ song.comments.count }} comments</i>
+                </p>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    </div>
 {%endblock%}

@@ -10,6 +10,7 @@
 
 </head>
 <body>
+  <div class="caption">🏅 Featured Player</div>
 
 <div class="player-container">
   <!-- 🎵 Music Player -->
@@ -36,6 +37,7 @@
 </li>
         {% endfor %}
       </ul>
+    <!-- 🔁 Recommended Songs -->
     </div>
   </div>
 
@@ -44,8 +46,8 @@
     <h3>Comments ({{ comments|length }})</h3>
     {% for comment in comments %}
     <div class="comment" data-id="{{ comment.id }}">
-    {% if comment.user.profile_picture %}
-      <img src="{{ comment.user.profile_picture.url }}" alt="" class="avatar" />
+    {% if comment.user.user.profile_picture %}
+      <img src="{{ comment.user.user.profile_picture.url }}" alt="" class="avatar" />
     {% else %}
     <img src="" alt="" class="avatar" />
     {% endif %}
@@ -70,7 +72,7 @@
         <div class="replies hidden">
           {% for reply in comment.replies.all %}
           <div class="reply">
-            <span class="username">{{ reply.user.display_name }}</span>:
+            <span class="username">{{ reply.user.display_name|safe }}</span>:
             <span class="body">{{ reply.body }}</span>
           </div>
           {% endfor %}
@@ -80,7 +82,21 @@
     {% endfor %}
   </div>
 </div>
-
+<div class="recommended">
+  <h4>Recommended for You</h4>
+  <ul id="recommendedList">
+    {% for rec in recommended_songs %}
+    <li data-src="{{ rec.song_file.url }}">
+      <img src="{{ rec.song_art.url }}" alt="Cover" class="rec-cover" />
+      <div class="rec-info">
+        <p class="rec-title">{{ rec.song_name }}</p>
+        <p class="rec-artist">{{ rec.artist.display_name|safe }}</p>
+      </div>
+      <button class="rec-play">▶</button>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 <script>
   const songs = [
     {% for song in songs %}
