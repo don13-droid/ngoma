@@ -1,10 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import Genre, Song, Album,Stream, Promotions, get_new_songs, get_popular_songs,\
      Comments, SiteData, ArtistProfile, get_hot_artists, get_all_time_best_artists,\
     recommend_songs, get_trending_songs
 from django.db.models import Count, Q,  OuterRef, Subquery, Sum
 from artist_admin.models import Sales
+from django.template.loader import render_to_string
 from django.utils import timezone
 from datetime import timedelta
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -124,6 +127,58 @@ def play_album(request, album_id):
     return render(request, 'muse/play.html', context=context)
 
 
+@require_POST
+@login_required
+def post_comment(request):
+    song_id = request.POST.get('song_id')
+    body = request.POST.get('body', '').strip()
+
+    if not song_id or not body:
+        return HttpResponseBadRequest()
+
+    song = get_object_or_404(Song, id=song_id)
+    comment = Comments.objects.create(
+        song=song,
+        user=request.user.profile,  # adjust for your user model
+        body=body,
+        active=True
+    )
+    comment.save()
+
+    # return updated comment section
+    comments = song.comments.filter(active=True, parent=None).prefetch_related('replies')
+    html = render_to_string('muse/partials/comments.html', {'comments': comments, 'current_song': song}, request=request)
+    return JsonResponse({'html': html})
+
+@require_POST
+@login_required
+def post_reply(request):
+    comment_id = request.POST.get('comment_id')
+    body = request.POST.get('body', '').strip()
+
+    if not comment_id or not body:
+        return HttpResponseBadRequest()
+
+    parent = get_object_or_404(Comments, id=comment_id)
+    reply = Comments.objects.create(
+        song=parent.song,
+        user=request.user.profile,
+        body=body,
+        parent=parent,
+        active=True
+    )
+    reply.save()
+
+    # return updated comment section
+    comments = parent.song.comments.filter(active=True, parent=None).prefetch_related('replies')
+    html = render_to_string('muse/partials/comments.html', {'comments': comments, 'current_song': parent.song}, request=request)
+    return JsonResponse({'html': html})
+
+def get_comments(request, song_id):
+    song = get_object_or_404(Song, id=song_id)
+    comments = song.comments.filter(active=True, parent=None).prefetch_related('replies')
+    html = render_to_string('muse/partials/comments.html', {'comments': comments}, request=request)
+    return JsonResponse({'html': html})
 def play_song(request, song_id):
     song = get_object_or_404(Song,
                              id=song_id)

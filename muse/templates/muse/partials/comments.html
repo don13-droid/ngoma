@@ -1,0 +1,45 @@
+{# muse/partials/comments.html #}
+<div class="comments-section">
+  <h3>Comments ({{ comments|length }})</h3>
+  {% for comment in comments %}
+    <div class="comment" data-id="{{ comment.id }}">
+      {% if comment.user.user.profile_picture %}
+        <img src="{{ comment.user.user.profile_picture.url }}" alt="" class="avatar" />
+      {% else %}
+        <img src="" alt="" class="avatar" />
+      {% endif %}
+
+      <div class="comment-body">
+        <div class="meta">
+          <span class="username">
+            {{ comment.user }}
+            {% if comment.user.verification_icon_color %}
+              <i class="fa fa-check-circle" style="color: {{ comment.user.verification_icon_color }}"></i>
+            {% endif %}
+          </span>
+          <span class="date">{{ comment.created }}</span>
+        </div>
+
+        <p>{{ comment.body }}</p>
+
+        <div class="actions">
+          <button class="like-comment"
+                  data-url="{% url 'muse:increment_comment_likes' %}"
+                  data-id="{{ comment.id }}">
+            ❤️ {{ comment.likes.count }}
+          </button>
+          <button class="toggle-replies">View Replies ({{ comment.replies.count }})</button>
+        </div>
+
+        <div class="replies hidden">
+          {% for reply in comment.replies.all %}
+            <div class="reply">
+              <span class="username">{{ reply.user.display_name|safe }}</span>:
+              <span class="body">{{ reply.body }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
