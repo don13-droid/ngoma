@@ -194,7 +194,7 @@ def update_song(request, pk):
             edit = form.save(commit=False)
             edit.save()
             header = 'Song successfully changed'
-            form= SongUpload(instance=instance)
+            form= SongUpload(user=request.user, instance=instance)
             context ={
                 'header':header,
                 'form':form
@@ -223,6 +223,22 @@ def delete_song(request, pk):
     }
     return render(request,'artist_admin/info_page.html', context)
 
+
+@login_required
+def draft_release_song(request, pk):
+    artist = get_object_or_404(ArtistProfile, user=request.user)
+    songs = Song.objects.filter(artist=artist)
+    song = get_object_or_404(Song, id=pk)
+    if song.is_draft:
+        song.is_draft = True
+        song.save()
+    else:
+        song.is_draft = False
+        song.save()
+    context = {
+        'songs':songs
+    }
+    return render(request, 'artist_admin/admin_songs.html', context=context)
 @login_required
 def song_upload(request):
     if request.method == 'POST':
@@ -235,7 +251,6 @@ def song_upload(request):
             objects = form.save(commit=False)
             objects.artist = user
             objects.save()
-            form = SongUpload()
             song_name = cd['song_name']
             header = f'Song "{song_name}" uploaded successfully'
             context = {
@@ -371,9 +386,6 @@ def create_artist_account(request):
                 return render(request, 'artist_admin/index.html')
             else:
                 print('printed errors',form.errors)
-
-
-
         else:
             form = ArtistAccountForm()
             context = {

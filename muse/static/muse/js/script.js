@@ -7,7 +7,22 @@ const songList = document.getElementById('songList');
 const playBtn = document.getElementById('playPause');
 const nextBtn = document.getElementById('next');
 const prevBtn = document.getElementById('prev');
+const songlikeBtn = document.getElementById('likeButton');
 
+function increment_play_count(song){
+    const csrftoken = getCookie('csrftoken');
+    fetch('/muse/increment_play_count/', {
+      method: 'POST',
+      body: JSON.stringify({ song_id: song }),
+      headers: { 'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+      }
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.message); // Optional: log response
+  });
+}
 function loadSong(index) {
   const song = songs[index];
   if (!song) return;
@@ -16,6 +31,9 @@ function loadSong(index) {
   artistName.textContent = song.artist.display_name;
   albumArt.src = song.song_art.url;
   audio.load();
+  increment_play_count(song.id);
+  audio.play();
+  playBtn.innerHTML = '<i class="fa fa-pause"></i>';
 }
 
 function getCookie(name) {
@@ -27,7 +45,13 @@ function getCookie(name) {
 loadSong(currentIndex);
 
 playBtn.addEventListener('click', () => {
-  audio.paused ? audio.play() : audio.pause();
+    if (audio.paused) {
+    audio.play();
+    playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+  } else {
+    audio.pause();
+    playBtn.innerHTML = '<i class="fa fa-play"></i>';
+  }
 });
 
 nextBtn.addEventListener('click', () => {
@@ -45,6 +69,11 @@ songList.addEventListener('click', e => {
     currentIndex = Number(e.target.getAttribute('data-index'));
     loadSong(currentIndex);
   }
+});
+
+// Continuous play
+audio.addEventListener('ended', () => {
+  nextBtn.click();
 });
 
 // Like buttons AJAX
@@ -77,8 +106,11 @@ document.querySelectorAll('.rec-play').forEach(button => {
   button.addEventListener('click', (e) => {
     const parent = button.closest('li');
     const src = parent.getAttribute('data-src');
+    const song = parent.getAttribute('data-song')
     audio.src = src;
     audio.play();
+    playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+    increment_play_count(song);
     songTitle.textContent = parent.querySelector('.rec-title').textContent;
     artistName.textContent = parent.querySelector('.rec-artist').textContent;
     albumArt.src = parent.querySelector('.rec-cover').src;

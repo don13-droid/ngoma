@@ -4,7 +4,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import Genre, Song, Album,Stream, Promotions, get_new_songs, get_popular_songs,\
      Comments, SiteData, ArtistProfile, get_hot_artists, get_all_time_best_artists,\
-    recommend_songs, get_trending_songs
+    recommend_songs, get_trending_songs, get_genre_songs
 from django.db.models import Count, Q,  OuterRef, Subquery, Sum
 from artist_admin.models import Sales
 from django.template.loader import render_to_string
@@ -65,17 +65,24 @@ def artist_songs(artist):
                     .order_by('-total_streams')
     return top_songs
 
+@login_required
 def increment_play_count(request):
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            song_id = request.POST.get('song_id')
-            song = get_object_or_404(Song, id = song_id)
-            print(song)
+        try:
+            data = json.loads(request.body)
+            song_id = data.get('song_id')
+            if not song_id:
+                return JsonResponse({'message': 'Missing song_id'}, status=400)
+            song = get_object_or_404(Song, id=song_id)
             stream = STREAM(request)
             stream.add(song=song, user=request.user)
-        else:
+
             return JsonResponse({'message': 'Play Count Incremented'})
-    return JsonResponse({'message': 'invalid Request'})
+        except Exception as e:
+            print(f"Error: {e}")
+            return JsonResponse({'message': 'Error processing request'}, status=400)
+    return JsonResponse({'message': 'Invalid request method'}, status=405)
+
 
 
 
@@ -99,15 +106,23 @@ def increment_song_likes(request):
 @login_required
 def increment_comment_likes(request):
     if request.method == 'POST':
-        comment_id = request.POST.get('comment_id')
-        comment = get_object_or_404(Comments,
-                                 id = comment_id)
-        print(comment.likes.all())
-        if request.user in comment.likes.all():
-            comment.likes.remove(request.user)
-        else:
-            comment.likes.add(request.user)
-    return JsonResponse({'status':'error'})
+        try:
+            data = json.loads(request.body)
+            comment_id = data.get('comment_id')
+
+            comment = get_object_or_404(Comments, id=comment_id)
+
+            if request.user in comment.likes.all():
+                comment.likes.remove(request.user)
+            else:
+                comment.likes.add(request.user)
+
+            return JsonResponse({'likes': comment.likes.count()})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
 
 def play_album(request, album_id):
     album = get_object_or_404(Album, id=album_id)
@@ -337,46 +352,29 @@ def ingoma_songs(request):
                 query |= Q(genre__name__icontains=keyword)
                 query |= Q(features__icontains=keyword)
 
-            object_list = Song.published.filter(query).distinct()
-            paginator = Paginator(object_list, 24)  # 3 posts in each page
-            page = request.GET.get('page')
-            try:
-                songs = paginator.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer deliver the first page
-                songs = paginator.page(1)
-            except EmptyPage:
-                # If page is out of range deliver last page of results
-                songs = paginator.page(paginator.num_pages)
+            songs = Song.published.filter(query).distinct()
+            top_genres = Genre.objects.all()
+
             form = SearchForm()
+            for genre in top_genres:
+                genre.top_songs = songs.filter(genre=genre)
             if len(songs) != 0:
                 header = f'Search results for "{search_arg}"'
             else:
                 header = f'No Search results found for "{search_arg}"'
             context = {
                 'header':header,
-                'songs': songs,
+                'genres': top_genres,
                 'form': form,
-                'page':page
             }
-            return render(request, 'muse/song_search.html', context)
+            return render(request, 'muse/songs.html', context)
     else:
-        two_weeks_ago = timezone.now() - timedelta(weeks=2)
-        subquery = Stream.objects.filter(
-            song=OuterRef('pk'),
-            timestamp__gte=two_weeks_ago
-        ).order_by().values('song').annotate(growth=Count('id')).values('growth')
-        songs_with_growth = Song.published.annotate(
-            stream_growth=Subquery(subquery)
-        ).order_by('-stream_growth')
-        top_genres = Genre.objects.all()
-
-        for genre in top_genres:
-            genre.top_songs = songs_with_growth.filter(genre=genre)[:12]
+        top_genres = get_genre_songs()
         form=SearchForm()
         context={
             'genres':top_genres,
-            'form':form
+            'form':form,
+            'header':'Ingoma Music'
         }
         return render(request,'muse/songs.html',context)
 

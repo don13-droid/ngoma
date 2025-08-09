@@ -50,7 +50,7 @@
                             {% if song.features %} <i class="song-features"> ft {{ song.features }}</i> {% endif %}
                         </p>
                     <p><i class="fa fa-heart"> {{song.likes.count}}</i>
-                        <i class="fa fa-headphones" > {{song.streams.count}}</i>
+                        <i class="fa fa-headphones" > {{song.play_count}}</i>
                         <i class="fa fa-comment"> {{ song.comments.count }}</i>
                     </p>
                     </div>

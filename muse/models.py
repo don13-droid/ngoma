@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count, Sum, F, Q
+from django.db.models import Count, Sum, F, Q, Subquery, OuterRef
 from django.contrib.auth.models import AbstractUser, Group
 from django.conf import settings
 from django.urls import reverse
@@ -236,7 +236,7 @@ def get_trending_songs():
                 song.movement = 'new'
         else:
             song.movement = 'new'
-    cache.set('previous_trending_songs', trending_songs, 60 * 60)
+            cache.set('previous_trending_songs', trending_songs, 60 * 60*24)
     return trending_songs
 
 def get_song_likes(song):
@@ -308,8 +308,23 @@ def get_all_time_best_artists():
         cache.set('all_time_best_artists', all_time_best_artists, 60*60*24)
     return all_time_best_artists
 
+def get_genre_songs():
+    genres = cache.get('ingoma_songs')
+    if genres is None:
+        genres = Genre.objects.all()
+        two_weeks_ago = datetime.now() - timedelta(days=30)
+        subquery = Stream.objects.filter(
+            song=OuterRef('pk'),
+            timestamp__gte=two_weeks_ago
+        ).order_by().values('song').annotate(growth=Count('id')).values('growth')
+        songs_with_growth = Song.published.annotate(
+            stream_growth=Subquery(subquery)
+        ).order_by('-stream_growth')
 
-
+        for genre in genres:
+            genre.top_songs = songs_with_growth.filter(genre=genre)[:12]
+        cache.set('ingoma_songs', genres, 60*60)
+    return genres
 class SiteData(models.Model):
     slug = models.SlugField(max_length=100, default='', unique=True)
     exchange_rate = models.DecimalField(max_digits=10, decimal_places=1)

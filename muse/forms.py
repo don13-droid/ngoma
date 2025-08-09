@@ -64,7 +64,7 @@ class SongUpload(forms.ModelForm):
 
         super(SongUpload, self).__init__(*args, **kwargs)
 
-        artist = get_object_or_404(ArtistProfile, user=self.user)
+        artist = ArtistProfile.objects.get(user=self.user)
         self.fields['album'].queryset = Album.objects.filter(artist=artist)
     class Meta:
         model = Song

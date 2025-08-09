@@ -9,6 +9,7 @@ urlpatterns = [
     path('album-upload', views.add_album, name='add-album'),
     path('song-upload/', views.song_upload, name='song-upload'),
     path(r'delete-song/(<pk>\w+)/', views.delete_song, name='delete_song'),
+    path(r'release_song/(<pk>\w+)/', views.draft_release_song, name='release_song'),
     path(r'update-song/(<pk>\w+)/', views.update_song, name='update-song'),
     path(r'user_sales/(<id>\w+)/', views.user_sales, name='user_sales'),
     path(r'user_payouts/(<id>\w+)/', views.artist_payouts, name='payouts'),

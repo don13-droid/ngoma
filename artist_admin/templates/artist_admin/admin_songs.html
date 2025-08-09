@@ -28,7 +28,7 @@
                         <th scope="col">Song</th>
                         <th scope="col">Album</th>
                         <th scope="col">Streams</th>
-                          <th scope="col">Released</th>
+                          <th scope="col">Draft</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
                       </tr>
@@ -37,15 +37,17 @@
                     {%for song in songs%}
                       <tr>
                         <th scope="row"><a href="{%url 'artist_admin:update-song' pk=song.id%}"><img src="{{song.song_art.url}}" alt=""></a></th>
-                        <td><a href="{%url 'artist_admin:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.song_name}}</td>
+                          <td><a href="{%url 'artist_admin:update-song' pk=song.id%}" class="text-primary fw-bold">{{song.song_name}}</a></td>
                         <td>{{song.album}}</td>
                         <td class="fw-bold">{{song.play_count}}</td>
-                        <td>{{song.feature}}</td>
-                          {% if song.is_draft %}
-                              <td>{{song.released}}</td>
+                          {% if not song.is_draft %}
+                              <td><a href="{% url 'artist_admin:release_song' pk=song.id %}">
+                                  <button type="button" class="btn btn-warning">Archive</button></a></td>
                               {% else %}
-                           <td><button type="button" class="btn btn-warning">Draft</button></td>
+                           <td><a href="{% url 'artist_admin:release_song' pk=song.id %}">
+                               <button type="button" class="btn btn-draft">Draft</button></a></td>
                           {% endif %}
+                      <td>{{ song.features }}</td>
                         <td><div class="icon">
                               <i class="bi bi-trash-fill"></i>
                               <a href="{%url 'artist_admin:delete_song' pk=song.id%}" class="label">Delete</a>

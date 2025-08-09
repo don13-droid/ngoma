@@ -167,3 +167,51 @@ body {
   font-size: 18px;
   cursor: pointer;
 }
+
+/* Like Button */
+.like-button {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.like-button:hover {
+  color: #ff6666;
+}
+
+/* Streams Info */
+.streams {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 8px;
+}
+
+.streams-icon {
+  font-size: 18px;
+  color: #00acee;
+}
+
+/* Features Section */
+.features {
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 4px;
+}
+
+.features span {
+  background-color: #333;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+  display: inline-block;
+}
+
