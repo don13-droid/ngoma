@@ -1,0 +1,71 @@
+{%extends 'base_admin.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Upload-Song{%endblock%}
+{%block content%}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>{{ song.song_name }}</h1>
+    </div><!-- End Page Title -->
+
+<section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+        <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ song.song_art.url}}" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ song.song_name}}</h5>
+                  <p class="card-text">
+                      Song by {{ song.artist }} {% if song.album %} in album {{ song.album }}{% endif %}
+                    <p>Uploaded on {{ song.created }} with current {{ song.plays }} streams</p>
+
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div><!-- End Card with an image on left -->
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Revenue From Your Song Contributions</h5>
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Song</th>
+                      <th scope="col">Owner</th>
+                    <th scope="col">Role</th>
+                      <th scope="col">Percentage</th>
+                      <th scope="col">Revenue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for contribution in contributions %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ contribution.song.song_name}}</td>
+                      <td>{{ contribution.song.artist.display_name|safe}}</td>
+                    <td>{{ contribution.role }}</td>
+                    <td>{{ contribution.percentage}}%</td>
+                  <td>usd{{ contribution.revenue}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{%endblock%}

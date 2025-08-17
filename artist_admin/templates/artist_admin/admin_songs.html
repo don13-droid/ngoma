@@ -31,6 +31,7 @@
                           <th scope="col">Draft</th>
                         <th scope="col">Feature</th>
                         <th scope="col">Delete</th>
+                          <th scope="col">Details</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,8 @@
                               <a href="{%url 'artist_admin:delete_song' pk=song.id%}" class="label">Delete</a>
                             </div>
                         </td>
+                          <td><a href="{% url 'artist_admin:single_song' pk=song.id %}">
+                                  <button type="button" class="btn btn-success">View</button></a></td>
                       </tr>
                     {%endfor%}
                     </tbody>

@@ -101,28 +101,21 @@
                 <div class="card-body">
                   <h5 class="card-title">Recent Payouts <span>| Today</span></h5>
 
-                  <table class="table table-borderless datatable">
+                  <table class="table datatable">
                     <thead>
                       <tr>
-                        <th scope="col">Reference Number</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Share Amount</th>
+                        <th scope="col">Song</th>
                       </tr>
                     </thead>
                     <tbody>
-                    {%for payout in sales%}
+                    {%for payment in payments%}
                       <tr>
-                        <th scope="row"><a href="#">{{sale.id}}</a></th>
-                        <td>{{sale.song}}</td>
-                        <td><a href="#" class="text-primary">Invoice</a></td>
-                        <td>ZIG{{sale.amount}}</td>
-                        <td>{{sale.created}}</td>
-                        {%if cleared%}
-                        <td><span class="badge bg-success">Withdrawn</span></td>
-                        {%else%}
-                        <td><span class="badge bg-danger">Outstanding</span></td>
-                        {%endif%}
+                        <th scope="row"><a href="#">{{payment.payment}}</a></th>
+
+                        <td>USD {{payment.amount}}</td>
+                        <td>{{payment.payment.song}}</td>
                       </tr>
                      {%endfor%}
                     </tbody>

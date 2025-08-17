@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import News_and_Updates, Sales, get_best_songs
+from .models import News_and_Updates,  get_best_songs, Payment, ArtistEarnings, ArtistShare
 from django.utils import timezone
 import datetime
 from django.db.models import Count, Sum
 from muse.forms import PayNowForm
 from datetime import timedelta
-from muse.models import ArtistProfile, Song, Album, Stream, User
+from muse.models import ArtistProfile, Song, Album, Stream, User, Contributions
 from muse.forms import  UserProfileForm, AlbumForm, SongUpload, ArtistAccountForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
@@ -137,6 +137,16 @@ def admin_songs(request):
         'songs':songs
     }
     return render(request,'artist_admin/admin_songs.html',context)
+
+@login_required
+def single_song(request, pk):
+    song = get_object_or_404(Song, id=pk)
+    contributions = Contributions.objects.filter(song=song)
+    context = {
+        'song':song,
+        'contributions':contributions
+    }
+    return render(request, 'artist_admin/song_view.html', context=context)
 
 @login_required
 def album_update(request, pk):
@@ -282,11 +292,12 @@ def admin_albums(request):
     return render(request,'artist_admin/admin_albums.html',context)
 
 
-
-def artist_payouts(request, id):
-    payouts = Sales.objects.filter(cleared=True)
+@login_required
+def Artist_Payments(request, id):
+    artist = get_object_or_404(ArtistProfile, user=request.user)
+    payments = ArtistEarnings.objects.filter(artist=artist)
     context = {
-        'sales':payouts
+        'payments':payments
 
     }
     return render(request, 'artist_admin/payouts.html', context)
@@ -322,11 +333,11 @@ def recent_updates():
 def dashboard(request):
     artist = get_object_or_404(ArtistProfile,
                                user=request.user)
-    monthly_revenue = artist_monthly_revenue(request.user.id)
-    sales_recent = recent_sales(request.user.id)
+    monthly_revenue = 0
+    sales_recent = 0
     total_streams = artist_total_streams(request.user.id)
     total_comments = Song.objects.filter(artist=request.user.id).aggregate(Count('comments'))
-    pr = payable_revenue(request.user.id)
+    pr = 0
     top_songs = get_best_songs(artist)
 
 
@@ -353,7 +364,7 @@ def updates_page(request, pk):
 
 @login_required
 def user_sales(request, id):
-    object_list = Sales.objects.filter(artist = id)
+    object_list = []
     paginator = Paginator(object_list, 12)
     page = request.GET.get('page')
     try:
@@ -375,16 +386,30 @@ def user_sales(request, id):
 
     return render(request, 'artist_admin/sales_list.html',context)
 
+@login_required
+def revenue_contribs(request):
+    artist = get_object_or_404(ArtistProfile, user=request.user)
+    contributions = Contributions.objects.filter(artist=artist)
+    context = {
+        'contributions':contributions
+    }
+    return render(request, 'artist_admin/artist_contributions.html', context=context)
+
 def create_artist_account(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = ArtistAccountForm(request.POST, request.FILES)
             if form.is_valid():
                 new_artist = form.save(commit=False)
-                new_artist.user = request.user
+                #ArtistProfile.objects.create(user=request.user)
                 new_artist.save()
                 return render(request, 'artist_admin/index.html')
             else:
+                form = ArtistAccountForm()
+                context = {
+                    'form':form
+                }
+                return render(request, 'artist_admin/create_artist_account.html', context=context)
                 print('printed errors',form.errors)
         else:
             form = ArtistAccountForm()

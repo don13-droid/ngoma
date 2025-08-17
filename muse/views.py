@@ -6,7 +6,6 @@ from .models import Genre, Song, Album,Stream, Promotions, get_new_songs, get_po
      Comments, SiteData, ArtistProfile, get_hot_artists, get_all_time_best_artists,\
     recommend_songs, get_trending_songs, get_genre_songs
 from django.db.models import Count, Q,  OuterRef, Subquery, Sum
-from artist_admin.models import Sales
 from django.template.loader import render_to_string
 from django.utils import timezone
 from datetime import timedelta
@@ -47,9 +46,9 @@ def register(request):
             return render(request, 'admin_panel/register_done.html', context)
         else:
             print(user_form.errors)
-            user_form = UserRegistrationForm()
+            form = UserRegistrationForm()
             context = {
-                'new_user': user_form
+                'new_user':form
             }
             return render(request, 'admin_panel/register.html', context)
     else:
@@ -205,6 +204,9 @@ def play_song(request, song_id):
     if song in top_songs:
         top_songs.remove(song)
     top_songs.insert(0, song)
+    popular_songs = get_popular_songs()
+    for song in popular_songs:
+        top_songs.append(song)
     #recommended = Song.published.exclude(id__in=[s.id for s in top_songs])[:5]
     comments = song.comments.filter(active=True, parent=None).prefetch_related('replies')
 

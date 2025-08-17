@@ -285,7 +285,7 @@
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{%url 'artist_admin:payouts' id=request.user.id%}">
-              <i class="bi bi-circle"></i><span>PayOuts</span>
+              <i class="bi bi-circle"></i><span>Payments</span>
             </a>
           </li>
           <li>
@@ -294,8 +294,8 @@
             </a>
           </li>
           <li>
-            <a href="">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
+            <a href="{% url 'artist_admin:artist-contrib' %}">
+              <i class="bi bi-circle"></i><span>Contribution Revenue</span>
             </a>
           </li>
         </ul>
@@ -312,12 +312,17 @@
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{%url 'artist_admin:admin_songs'%}">
-              <i class="bi bi-circle"></i><span>Your Songs</span>
+              <i class="bi bi-circle"></i><span>Songs</span>
             </a>
           </li>
           <li>
             <a href="{% url 'artist_admin:song-upload'%}">
               <i class="bi bi-cloud-upload-fill"></i><span>Upload Song</span>
+            </a>
+          </li>
+            <li>
+            <a href="{% url 'artist_admin:song-upload'%}">
+              <i class="bi bi-cloud-upload-fill"></i><span>Song Contributions</span>
             </a>
           </li>
         </ul>

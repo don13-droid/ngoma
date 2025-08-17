@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genre, Song ,Album,\
+from .models import Genre, Song ,Album, Contributions,\
      Comments, SiteData, ArtistProfile, Stream,  User, Promotions
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -34,11 +34,14 @@ class GenreAdmin(admin.ModelAdmin):
     list_filter = ['name']
 
 # Register your models here.
-@admin.register(Song)
+class ContributionAdmin(admin.TabularInline):
+    model = Contributions
+    extra = 1
+
 class SongAdmin(admin.ModelAdmin):
     list_display = ['song_name','genre', 'artist','created','is_draft', 'play_count']
     list_filter = ['genre','is_draft', ]
-
+    inlines = [ContributionAdmin]
 
 
 @admin.register(Comments)
@@ -73,4 +76,5 @@ class CustomUserAdmin(admin.ModelAdmin):
             return []
         return super().get_inline_instances(request, obj)
 
-admin.site.register(User, CustomUserAdmin)
+admin.site.register(User,CustomUserAdmin)
+admin.site.register(Song, SongAdmin)

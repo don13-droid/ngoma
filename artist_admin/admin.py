@@ -2,10 +2,26 @@ import csv
 import datetime
 from django.http import HttpResponse
 from django.contrib import admin
-from .models import Sales, News_and_Updates, Song_Payments
+from .models import News_and_Updates, Payment, PaymentMethod, \
+    ArtistEarnings, ArtistShare
 
 
+@admin.register(ArtistShare)
+class ArtistShareAdmin(admin.ModelAdmin):
+    list_display = ['artist', 'payment', 'song', 'percentage', 'amount']
+    list_filter = ['payment']
+@admin.register(ArtistEarnings)
+class EarningsAdmin(admin.ModelAdmin):
+    list_display = ['artist', 'payment', 'amount']
+    list_filter = ['artist']
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['song', 'user','amount', 'payment_method', 'transaction_id', 'payment_date', 'status']
+    list_filter = ['payment_method', 'status']
 
+@admin.register(PaymentMethod)
+class MethodAdmin(admin.ModelAdmin):
+    list_display = ['name']
 
 def make_cleared(modeladmin, request, queryset):
     queryset.update(cleared=True)
@@ -34,20 +50,9 @@ def export_to_csv(modeladmin, request, queryset):
     return response
 
 export_to_csv.short_description = 'Export to CSV'
-
-@admin.register(Sales)
-class SalesAdmin(admin.ModelAdmin):
-    list_display = ['song','amount','status','created','cleared']
-    list_filter = ['song','amount', 'status','created','cleared']
-    list_editable=['cleared']
-    actions = [make_cleared, export_to_csv]
+#actions = [make_cleared, export_to_csv]
 
 @admin.register(News_and_Updates)
 class UpdatesAdmin(admin.ModelAdmin):
     list_display = ['title', 'status', 'created']
     list_filter = ['status', 'created']
-
-@admin.register(Song_Payments)
-class SongPayementsAdmin(admin.ModelAdmin):
-    list_display = ['song', 'user', 'payment_status', 'amount', 'created']
-    list_filter = ['payment_status', 'song']

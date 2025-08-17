@@ -21,8 +21,9 @@ class AlbumForm(forms.ModelForm):
 
 class ArtistAccountForm(forms.ModelForm):
     class Meta:
-        model = ArtistProfile
-        exclude = ('user',)
+        model = User
+        fields = ('profile_picture','phone', 'x',
+                  'facebook', 'instagram', 'youtube')
 class SearchForm(forms.Form):
     search = forms.CharField(label='Search',max_length=500)
 
@@ -33,7 +34,7 @@ class UserRegistrationForm(forms.ModelForm):
                                 widget=forms.PasswordInput)
     class Meta:
         model = User
-        fields = ('username', 'email', 'is_artist')
+        fields = ('username', 'email')
 
     def clean_password2(self):
         cd = self.cleaned_data

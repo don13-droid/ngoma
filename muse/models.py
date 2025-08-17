@@ -160,6 +160,7 @@ class Song(models.Model):
     song_file = models.FileField(upload_to='songs/%Y/%m/%d', blank=False, validators=[ExtensionValidator(['mp3', 'm4a']), validate_file_size])
     song_art = models.ImageField(upload_to='song_art/%Y/%m/%d', validators=[validate_image_size,])
     created = models.DateField(auto_now_add=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=1.00)
     play_count = models.IntegerField(default=0)
     likes = models.ManyToManyField(User, related_name='liked_songs', blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=1, blank=True, null=True)
@@ -178,7 +179,30 @@ class Song(models.Model):
                        args=[
                             self.id,
                             ])
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            Contributions.objects.create(
+                song=self,
+                artist=self.artist,
+                role='singer',
+                percentage=100
+            )
 
+class Contributions(models.Model):
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name='song_contributions')
+    artist = models.ForeignKey(ArtistProfile, on_delete=models.CASCADE, related_name='artist_contributions')
+    role = models.CharField(max_length=255, choices=[('writer', 'Writer'),
+                                                     ('singer', 'Singer'),
+                                                     ('producer', 'Producer'),
+                                                     ('editor', 'Editor'),
+                                                     ('director', 'Director'),
+                                                     ('other', 'Other')], default='singer')
+    percentage = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.artist.user} - {self.song.song_name}'
 class Stream(models.Model):
     song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name='streams')
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -215,7 +239,7 @@ def get_trending_songs():
         trending_songs = Song.objects.annotate(stream_count=Count(
             'streams', filter=Q(streams__timestamp__gte=two_weeks_ago), is_draft=False)
         ).order_by('-stream_count')[:12]
-        cache.set('trending_songs', trending_songs, 60*60)
+        cache.set('trending_songs', trending_songs, 60)
 
     previous_trending_songs = cache.get('previous_trending_songs')
 
@@ -322,7 +346,7 @@ def get_genre_songs():
         ).order_by('-stream_growth')
 
         for genre in genres:
-            genre.top_songs = songs_with_growth.filter(genre=genre)[:12]
+            genre.top_songs = songs_with_growth.filter(genre=genre)[:15]
         cache.set('ingoma_songs', genres, 60*60)
     return genres
 class SiteData(models.Model):
@@ -339,19 +363,6 @@ class SiteData(models.Model):
     objects = models.Manager()
 
 
-class OwnerShip(models.Model):
-    song = models.ManyToManyField(Song, related_name='owner_song')
-    artist = models.ManyToManyField(User, related_name='artist_share')
-    share = models.DecimalField(decimal_places=2, max_digits=3)
-
-    class Meta:
-        verbose_name = 'Ownership'
-        verbose_name_plural = 'Ownerships'
-
-    def __str__(self):
-        return 'song ownership updated'
-
-
 class Promotions(models.Model):
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='promotions')
@@ -363,3 +374,7 @@ class Promotions(models.Model):
                                        ('slot 3', 'Slot 3')])
     def __str__(self):
         return f'{self.title} added to {self.slot}'
+
+    class Meta:
+        verbose_name = 'Promotion'
+        verbose_name_plural = 'Promotions'
