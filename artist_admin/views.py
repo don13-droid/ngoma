@@ -7,7 +7,7 @@ from django.db.models import Count, Sum
 from muse.forms import PayNowForm
 from datetime import timedelta
 from muse.models import ArtistProfile, Song, Album, Stream, User, Contributions
-from muse.forms import  UserProfileForm, AlbumForm, SongUpload, ArtistAccountForm
+from muse.forms import  UserProfileForm, AlbumForm, SongUpload, ArtistAccountForm, ContributionFormSet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from paynow import Paynow
@@ -273,10 +273,12 @@ def song_upload(request):
 
     else:
         form = SongUpload(user=request.user)
+        formset = ContributionFormSet()
         header = 'Song Details'
         context ={
             'header':header,
-            'form':form
+            'form':form,
+            'formset':formset
         }
         return render(request, 'artist_admin/song_upload.html',context)
 

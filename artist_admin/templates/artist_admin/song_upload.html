@@ -20,6 +20,12 @@
               <form method="post" enctype="multipart/form-data">
                 <div class="row mb-3">
                   {{form | crispy}}
+                    {{ formset.management_form }}
+                <p>Add your Song Contributions here and percentage ownership of songs.
+                Song payments will be received according to ownership of the song.</p>
+                    {% for form in formset %}
+                    {{ form|crispy}}
+                    {% endfor %}
                   {%csrf_token%}
                   <input type="hidden" name="next" value="{{ next }}" />
                 <div class="row mb-3">

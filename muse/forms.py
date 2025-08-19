@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Comments, Song, Album, ArtistProfile, User
+from .models import Comments, Song, Album, ArtistProfile, User, Contributions
 from django.forms import TextInput
 from django.shortcuts import get_object_or_404
 
@@ -70,6 +70,13 @@ class SongUpload(forms.ModelForm):
     class Meta:
         model = Song
         exclude = ['rating', 'artist', 'likes', 'play_count']
+
+class ContributionForm(forms.ModelForm):
+    class Meta:
+        model = Contributions
+        exclude = ['__all__']
+
+ContributionFormSet = forms.inlineformset_factory(Song, Contributions, form=ContributionForm, extra=2)
 
 class PayNowForm(forms.Form):
     email = forms.EmailField()
