@@ -38,6 +38,12 @@ class Payment(models.Model):
         earnings = self.amount - commission - tax
         return earnings
 
+    def redirect_if_success(self):
+        """Redirects to download page if payment succeeded."""
+        if self.status == 'success':
+            return redirect(reverse('song_download', args=[self.song.id]))
+        return
+
 class ArtistEarnings(models.Model):
     artist = models.ForeignKey(ArtistProfile, on_delete=models.CASCADE,related_name='artist_earnings')
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='artist_earnings_payment')
