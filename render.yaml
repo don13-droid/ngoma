@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: ngoma
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn ngoma.wsgi:application
+    autoDeploy: true
