@@ -25,7 +25,7 @@ SECRET_KEY = 'tnt+)+sa8f&029amzci2ru4o3pjgec$^i3#q5kp-(tzzlj8qky'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STREAM_SESSION_ID = 'stream'
@@ -140,7 +140,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 LOGIN_REDIRECT_URL = 'muse:dashboard'
 LOGOUT_REDIRECT_URL = 'muse:dashboard'
 
