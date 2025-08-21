@@ -7,10 +7,7 @@ ADMINS = (
 ALLOWED_HOSTS = ['ngoma.co.zw', 'www.ngoma.co.zw','127.0.0.1', 'ngoma-lwo3.onrender.com']
 DATABASES = {
         'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ngoma',
-        'USER': 'ngoma',
-        'PASSWORD': 'cheatcode',
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-}
+    }
