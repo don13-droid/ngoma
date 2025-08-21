@@ -25,7 +25,7 @@ SECRET_KEY = 'tnt+)+sa8f&029amzci2ru4o3pjgec$^i3#q5kp-(tzzlj8qky'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','ngoma-lwo3.onrender.com', ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STREAM_SESSION_ID = 'stream'
